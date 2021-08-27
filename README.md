@@ -1,14 +1,34 @@
-# atoss-cli
+# About
 
-A Clojure library designed to ... well, that part is up to you.
+A Clojure CLI tool designed to interact with ATOSS. 
 
 ## Usage
 
+### Requirements
+
+You need a decently modern version of JRE to run built `atoss-cli` JARs.
+
+For development, you will need:
+
+- Clojure
+- Leiningen
+- Up to date `chromedriver` and Google Chrome.
+
 FIXME
+
+### Build
+
+Simply run
+
+```bash
+
+lein uberjar
+
+```
 
 ## License
 
-Copyright © 2021 FIXME
+Copyright © 2021 Daniils Petrovs Platogo Interactive Entertainment Gmbh.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
