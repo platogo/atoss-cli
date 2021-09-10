@@ -8,7 +8,6 @@
 (spec/def :day/code (spec/or
                      :code #{:du :nu :rt :sd :ta :th :tp :ts :wh}
                      :empty nil?))
-(spec/def :calendar/date #(spec/int-in-range? 1 32 %))
 
 (def atoss-url "https://ases.novomatic.com/SES/html")
 
@@ -18,16 +17,8 @@
 (def fav-btn {:css ".is-favorite"})
 (def logout-btn {:css ".z-logoutbutton"})
 
+(def update-btn {:css ".z-toolbarbutton:nth-of-type(1)"})
 (def date-input {:css ".z-datebox-input"})
-(def date-box {:css ".z-datebox-button"})
-
-(def day-code-cell {:css "div.slick-cell > span.z-bandbox.z-bandboxases"})
-(def day-code-input {:css ".z-bandbox-input.inTable"})
-
-(defn- date-calendar-cell-btn
-  [driver date]
-  (api/query-tree driver {:fn/has-classes [:z-calendar-weekday :z-calendar-cell]
-                          :fn/text date :index 1}))
 
 (defn setup-driver
   "Create a default driver instance to be used for interacting with ATOSS."
@@ -46,15 +37,19 @@
     (api/fill-active user)
     (api/fill-active keys/tab)
     (api/fill-active pass)
-    (api/fill-active keys/enter)))
+    (api/fill-active keys/enter))
+  (println "Logged in"))
 
 (defn logout
   [driver]
   (println "Logging out of ATOSS")
   (doto driver
-    (api/switch-frame :applicationIframe)
     (api/click nav-user-btn)
     (api/click logout-btn)))
+
+(defn end
+  [driver]
+  (api/quit driver))
 
 (defn nav-to-time-correction
   "Navigate the driver to the time correction page.
@@ -62,6 +57,7 @@
   [driver]
   (doto driver
     (api/switch-frame :applicationIframe)
+    (api/wait-visible nav-menu-btn)
     (api/click nav-menu-btn)
     (api/click fav-btn)
     (api/wait-visible {:tag :span :fn/has-text "Tagescode"})))
@@ -69,29 +65,36 @@
 (defn set-date
   "Sets the day of the month in time correction that the time pair will be applied to."
   [driver date]
-  (if (spec/valid? :calendar/date (Integer/parseInt date))
-    (doto driver
-      (api/click date-box)
-      (api/click (date-calendar-cell-btn driver date)))
-    (spec/explain :calendar/date (Integer/parseInt date))))
+  (doto driver
+    (api/wait-visible date-input)
+    (api/click date-input)
+    (api/wait 1)
+    (api/fill-active date)
+    (api/wait 1)
+    (api/click update-btn)))
 
 (defn create-time-pair-entry
   "Create a new time entry as a combination of day code and a time pair for a given day."
   [driver {day-code :day-code start :start-time end :end-time}]
-  (if (spec/valid? :day/code day-code)
+  (if (spec/valid? :day/code (keyword day-code))
     (do
       (println (if (nil? day-code)
                  "No day code provided"
                  (str "Day code: " day-code)))
       (doto driver
-        (api/click day-code-cell)
-        (api/click day-code-input)
-        (api/clear day-code-input))
+        (api/click date-input)
+        (api/fill-active keys/tab)
+        (api/fill-active keys/tab)
+        (api/fill-active keys/tab))
+      (api/wait driver 3) ;; Do not touch waiters - if it is any less, the UI will not have enough time to update
       (doto driver
-        (api/fill day-code-input (if (nil? day-code) "" (name day-code)))
-        (api/fill day-code-input keys/tab)
+        (api/fill-active (if (nil? day-code) "" (name day-code)))
+        (api/fill-active keys/tab)
+        (api/wait 2)
         (api/fill-active start)
         (api/fill-active keys/tab)
+        (api/wait 2)
         (api/fill-active end)
-        (api/fill-active keys/enter)))
+        (api/fill-active keys/enter)
+        (api/wait 2)))
     (spec/explain :day/code day-code)))
