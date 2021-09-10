@@ -7,6 +7,9 @@
 (def workday {:def-start-time "9:00"
               :def-end-time "17:30"})
 
+(def nav-menu-btn {:css "#nav_menu"})
+(def nav-user-btn {:css "#nav_user"})
+
 (def fav-btn {:css ".is-favorite"})
 
 (defn login
@@ -26,6 +29,7 @@
   This is where all of the data entry must happen."
   [driver]
   (doto driver
-    (api/switch-frame-parent)
+    (api/switch-frame :applicationIframe)
+    (api/click nav-menu-btn)
     (api/click fav-btn)
     (api/wait-visible {:tag :span :fn/has-text "Tagescode"})))
