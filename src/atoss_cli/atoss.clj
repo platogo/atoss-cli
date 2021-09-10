@@ -11,6 +11,15 @@
 (def nav-user-btn {:css "#nav_user"})
 
 (def fav-btn {:css ".is-favorite"})
+(def logout-btn {:css ".z-logoutbutton"})
+
+(def date-input {:css ".z-datebox-input"})
+(def date-box {:css ".z-datebox-button"})
+
+(defn- date-calendar-cell-btn
+  [driver date]
+  (api/query-tree driver {:fn/has-classes [:z-calendar-weekday :z-calendar-cell]
+                          :fn/text date :index 1}))
 
 (defn login
   "Perform login into ATOSS dashboard using provided ATOSS credentials."
@@ -24,6 +33,14 @@
     (api/fill-active pass)
     (api/fill-active keys/enter)))
 
+(defn logout
+  [driver]
+  (println "Logging out of ATOSS")
+  (doto driver
+    (api/switch-frame :applicationIframe)
+    (api/click nav-user-btn)
+    (api/click logout-btn)))
+
 (defn nav-to-time-correction
   "Navigate the driver to the time correction page.
   This is where all of the data entry must happen."
@@ -33,3 +50,10 @@
     (api/click nav-menu-btn)
     (api/click fav-btn)
     (api/wait-visible {:tag :span :fn/has-text "Tagescode"})))
+
+(defn set-date
+  "Sets the day of the month in time correction that the time pair will be applied to."
+  [driver date]
+  (doto driver
+    (api/click date-box)
+    (api/click (date-calendar-cell-btn driver date))))
