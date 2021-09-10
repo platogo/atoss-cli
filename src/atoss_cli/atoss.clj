@@ -1,7 +1,14 @@
 (ns atoss-cli.atoss
-  (:require [etaoin.api :as api]
+  "Functions related to interacting with ATOSS via WebDriver."
+  (:require [clojure.spec.alpha :as spec]
+            [etaoin.api :as api]
             [etaoin.keys :as keys])
   (:gen-class))
+
+(spec/def :day/code (spec/or
+                     :code #{:du :nu :rt :sd :ta :th :tp :ts :wh}
+                     :empty nil?))
+(spec/def :calendar/date #(spec/int-in-range? 1 32 %))
 
 (def atoss-url "https://ases.novomatic.com/SES/html")
 (def workday {:def-start-time "9:00"
@@ -15,6 +22,9 @@
 
 (def date-input {:css ".z-datebox-input"})
 (def date-box {:css ".z-datebox-button"})
+
+(def day-code-cell {:css "div.slick-cell > span.z-bandbox.z-bandboxases"})
+(def day-code-input {:css ".z-bandbox-input.inTable"})
 
 (defn- date-calendar-cell-btn
   [driver date]
@@ -54,6 +64,29 @@
 (defn set-date
   "Sets the day of the month in time correction that the time pair will be applied to."
   [driver date]
-  (doto driver
-    (api/click date-box)
-    (api/click (date-calendar-cell-btn driver date))))
+  (if (spec/valid? :calendar/date (Integer/parseInt date))
+    (doto driver
+      (api/click date-box)
+      (api/click (date-calendar-cell-btn driver date)))
+    (spec/explain :calendar/date (Integer/parseInt date))))
+
+(defn create-time-pair-entry
+  "Create a new time entry as a combination of day code and a time pair for a given day."
+  [driver {day-code :day-code start :start-time end :end-time}]
+  (if (spec/valid? :day/code day-code)
+    (do
+      (println (if (nil? day-code)
+                 "No day code provided"
+                 (str "Day code: " day-code)))
+      (doto driver
+        (api/click day-code-cell)
+        (api/click day-code-input)
+        (api/clear day-code-input))
+      (doto driver
+        (api/fill day-code-input (if (nil? day-code) "" (name day-code)))
+        (api/fill day-code-input keys/tab)
+        (api/fill-active start)
+        (api/fill-active keys/tab)
+        (api/fill-active end)
+        (api/fill-active keys/enter)))
+    (spec/explain :day/code day-code)))
