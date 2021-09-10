@@ -11,8 +11,6 @@
 (spec/def :calendar/date #(spec/int-in-range? 1 32 %))
 
 (def atoss-url "https://ases.novomatic.com/SES/html")
-(def workday {:def-start-time "9:00"
-              :def-end-time "17:30"})
 
 (def nav-menu-btn {:css "#nav_menu"})
 (def nav-user-btn {:css "#nav_user"})

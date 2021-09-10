@@ -6,6 +6,7 @@
   :main ^:skip-aot atoss-cli.core
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.10.1"]
-                 [etaoin "0.4.5"]]
-  
+                 [etaoin "0.4.5"]
+                 [org.clojure/tools.cli "1.0.206"]]
+
   :repl-options {:init-ns atoss-cli.core})
