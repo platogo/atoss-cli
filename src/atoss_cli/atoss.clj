@@ -31,6 +31,13 @@
   (api/query-tree driver {:fn/has-classes [:z-calendar-weekday :z-calendar-cell]
                           :fn/text date :index 1}))
 
+(defn setup-driver
+  "Create a default driver instance to be used for interacting with ATOSS."
+  []
+  (let [driver (api/chrome)]
+    (api/set-window-size driver 1200 800)
+    driver))
+
 (defn login
   "Perform login into ATOSS dashboard using provided ATOSS credentials."
   [driver {user :username pass :password}]
