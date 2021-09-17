@@ -6,12 +6,7 @@ A Clojure CLI tool designed to interact with ATOSS.
 
 ### Prerequisite
 
-Log into ATOSS once in German mode, and mark **Zeitkorrektung** in the nav menu as favorite. This needs to only be done once.
-
-![zeitkorrektung](./zeitkorrektung.png)
-
-
-Create a file called `.atoss` in your home directory (e.g. `~/.atoss`).
+Create a text file named `.atoss` in your home directory (e.g. `~/.atoss`).
 
 The file should be written in [EDN](https://github.com/edn-format/edn) with the following content:
 
@@ -20,25 +15,31 @@ The file should be written in [EDN](https://github.com/edn-format/edn) with the 
 ```
 
 ```bash
-
-java -jar target/uberjar/atoss-cli-standalone.jar -s "9:15" -e "16:45" -d "16.09.2021"
+atoss-cli -s "9:15" -e "16:45" -d "16.09.2021"
 
 ATOSS CLI by Platogo Interactive Entertainment Gmbh.
 Authors: Daniils Petrovs
+  -d, --date DATE        17.09.2021  Date in the format DD.MM.YYYY, by default current date.
   -c, --day-code CODE    nil         Valid ATOSS day code (e.g. wh for WFH) can also be left blank.
   -s, --start-time TIME  9:00        Work start time in the format HH:MM
   -e, --end-time TIME    17:00       Work end time in the format HH:MM
   -v                                 Verbosity level
-  -h, --help, :errors nil}
+  -h, --help
 ```
 
-For example, if you were working from home on `17.09.2021` from `9:00` to `17:30`:
+For example, if you were working from home today from `9:00` to `17:30`:
 
 ```bash
-java -jar target/uberjar/atoss-cli-standalone.jar -c wh -e "17:30" -d "17.09.2021"
+atoss-cli -c wh -e "17:30"
 ```
 
 If you are unsure about available day codes, you can always check ATOSS manually.
+
+You can always view the available arguments by typing
+
+```bash
+atoss-cli help
+```
 
 ### Requirements
 
@@ -60,6 +61,12 @@ Run using `lein run` or with an interactive REPL: `lein repl`
 
 Run all tests using `lein test`
 
+### Installation
+
+Clone this repository and run [install.sh](./install.sh).
+
+Make sure you are either in the office network or connected to the `banana` VPN.
+
 ### Build
 
 Simply run
@@ -71,6 +78,11 @@ lein uberjar
 ```
 
 This will build a fully self-contained JAR, ready to be run anywhere.
+
+## Roadmap
+
+  - [ ] Add action to view logged time
+  - [ ] Improve help menu
 
 ## License
 

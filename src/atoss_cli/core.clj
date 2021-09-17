@@ -49,5 +49,9 @@ Authors: Daniils Petrovs")
 
 (defn -main [& args]
   (println desc)
-  (let [opts (parse-opts args cli-options)]
-    (log-time opts)))
+  (let [{arguments :arguments
+         summary :summary,
+         :as opts} (parse-opts args cli-options)]
+    (if (.contains arguments "help")
+      (print summary)
+      (log-time opts))))
