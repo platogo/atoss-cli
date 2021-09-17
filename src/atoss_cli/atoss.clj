@@ -17,7 +17,7 @@
 (def nav-menu-btn {:css "#nav_menu"})
 (def nav-user-btn {:css "#nav_user"})
 
-(def fav-btn {:css ".is-favorite"})
+(def zeitkorr-btn {:css "div.z-panelchildren > div.z-atossbutton:nth-of-type(4)"})
 (def logout-btn {:css ".z-logoutbutton"})
 
 (def update-btn {:css ".z-toolbarbutton:nth-of-type(1)"})
@@ -61,11 +61,10 @@
   This is where all of the data entry must happen."
   [driver]
   (doto driver
-    (api/switch-frame :applicationIframe)
     (api/wait-visible nav-menu-btn)
     (api/click nav-menu-btn)
-    (api/wait-visible fav-btn)
-    (api/click fav-btn)
+    (api/wait-visible zeitkorr-btn)
+    (api/click zeitkorr-btn)
     (api/wait-visible {:tag :span :fn/has-text "Tagescode"})))
 
 (defn set-date
