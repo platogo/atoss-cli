@@ -52,7 +52,6 @@ Authors: Daniils Petrovs")
   (let [{arguments :arguments
          summary :summary,
          :as opts} (parse-opts args cli-options)]
-    (println "Arguments: " arguments)
     (if (.contains arguments "help")
       (println summary)
       (log-time opts))))

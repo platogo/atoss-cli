@@ -21,5 +21,3 @@ echo "Installing wrapper"
 
 cp -fr $PWD/wrapper.sh "/usr/local/bin/atoss-cli"
 
-# echo "Install complete, you can now use `atoss-cli`"
-
