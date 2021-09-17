@@ -1,13 +1,15 @@
 (ns atoss-cli.atoss
   "Functions related to interacting with ATOSS via WebDriver."
   (:require [clojure.spec.alpha :as spec]
+            [clojure.edn :as edn]
             [etaoin.api :as api]
             [etaoin.keys :as keys])
   (:gen-class))
 
 (spec/def :day/code (spec/or
                      :code #{:du :nu :rt :sd :ta :th :tp :ts :wh}
-                     :empty nil?))
+                     :empty nil?
+                     :empty-str #(= % "")))
 
 (def atoss-url "https://ases.novomatic.com/SES/html")
 
@@ -23,7 +25,7 @@
 (defn setup-driver
   "Create a default driver instance to be used for interacting with ATOSS."
   []
-  (let [driver (api/chrome)]
+  (let [driver (api/chrome-headless)]
     (api/set-window-size driver 1200 800)
     driver))
 
@@ -59,6 +61,7 @@
     (api/switch-frame :applicationIframe)
     (api/wait-visible nav-menu-btn)
     (api/click nav-menu-btn)
+    (api/wait-visible fav-btn)
     (api/click fav-btn)
     (api/wait-visible {:tag :span :fn/has-text "Tagescode"})))
 
@@ -70,8 +73,9 @@
     (api/click date-input)
     (api/wait 1)
     (api/fill-active date)
-    (api/wait 1)
-    (api/click update-btn)))
+    (api/wait 2)
+    (api/click update-btn)
+    (api/wait 1)))
 
 (defn create-time-pair-entry
   "Create a new time entry as a combination of day code and a time pair for a given day."
@@ -83,6 +87,7 @@
                  (str "Day code: " day-code)))
       (doto driver
         (api/click date-input)
+        (api/fill-active keys/tab)
         (api/fill-active keys/tab)
         (api/fill-active keys/tab)
         (api/fill-active keys/tab))
@@ -98,3 +103,10 @@
         (api/fill-active keys/enter)
         (api/wait 2)))
     (spec/explain :day/code day-code)))
+
+(defn creds-from-dotfile
+  "Returns atoss credentials from dotfile in home directory."
+  []
+  (let [dotfile-name ".atoss"
+        dotfile-path (str (System/getProperty "user.home") "/" dotfile-name)]
+    (-> dotfile-path (slurp) (edn/read-string))))
