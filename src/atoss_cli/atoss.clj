@@ -13,6 +13,7 @@
 
 (def atoss-url "https://ases.novomatic.com/SES/html")
 
+(def login-btn {:css ".btn-login"})
 (def nav-menu-btn {:css "#nav_menu"})
 (def nav-user-btn {:css "#nav_user"})
 
@@ -35,7 +36,9 @@
   (println "Logging into ATOSS with user: " user)
   (doto driver
     (api/go atoss-url)
-    (api/wait 3) ;; TODO: replace with proper waiter
+    (api/switch-frame :applicationIframe)
+    (api/wait-enabled login-btn)
+    (api/wait 2)
     (api/fill-active user)
     (api/fill-active keys/tab)
     (api/fill-active pass)
