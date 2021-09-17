@@ -8,5 +8,9 @@
   :dependencies [[org.clojure/clojure "1.10.1"]
                  [etaoin "0.4.5"]
                  [org.clojure/tools.cli "1.0.206"]]
+  :target-path "target/%s"
+  :jar-name "atoss-cli.jar"
+  :uberjar-name "atoss-cli-standalone.jar"
 
+  :profiles {:uberjar {:aot :all}}
   :repl-options {:init-ns atoss-cli.core})
