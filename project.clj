@@ -13,4 +13,5 @@
   :uberjar-name "atoss-cli-standalone.jar"
 
   :profiles {:uberjar {:aot :all}}
+  :plugins [[lein-cljfmt "0.8.0"]]
   :repl-options {:init-ns atoss-cli.core})
