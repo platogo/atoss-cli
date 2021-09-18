@@ -6,6 +6,8 @@
             [etaoin.keys :as keys])
   (:gen-class))
 
+(def valid-day-codes #{"du" "nu" "rt" "sd" "ta" "th" "tp" "ts" "wh" "" nil})
+
 (spec/def :day/code (spec/or
                      :code #{:du :nu :rt :sd :ta :th :tp :ts :wh}
                      :empty nil?
