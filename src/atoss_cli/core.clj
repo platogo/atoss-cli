@@ -2,6 +2,7 @@
   "Entrypoint module for the ATOSS CLI."
   (:require [clojure.tools.cli :refer [parse-opts]]
             [atoss-cli.atoss :as atoss])
+  (:import (java.util Date) [java.text SimpleDateFormat])
   (:gen-class))
 
 (def desc "ATOSS CLI by Platogo Interactive Entertainment Gmbh.
@@ -47,7 +48,7 @@ Authors: Daniils Petrovs")
 
 (defn -main [& args]
   (println desc)
-  (let [{arguments :arguments
+  (let [{^java.util.Collection arguments :arguments
          summary :summary,
          :as opts} (parse-opts args cli-options)]
     (if (.contains arguments "help")
