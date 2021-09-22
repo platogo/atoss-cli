@@ -18,7 +18,6 @@ The file should be written in [EDN](https://github.com/edn-format/edn) with the 
 atoss-cli -s "9:15" -e "16:45" -d "16.09.2021"
 
 ATOSS CLI by Platogo Interactive Entertainment Gmbh.
-Authors: Daniils Petrovs
   -d, --date DATE        17.09.2021  Date in the format DD.MM.YYYY, by default current date.
   -c, --day-code CODE    nil         Valid ATOSS day code (e.g. wh for WFH) can also be left blank.
   -s, --start-time TIME  9:00        Work start time in the format HH:MM
@@ -64,6 +63,8 @@ Run all tests using `lein test`
 ### Installation
 
 Clone this repository and run [install.sh](./install.sh).
+
+If you did not build the uberjar locally, you must have the [Github CLI](https://cli.github.com) installed.
 
 Make sure you are either in the office network or connected to the `banana` VPN.
 
