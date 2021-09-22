@@ -5,7 +5,7 @@ PWD=$(pwd)
 
 echo "Installing ATOSS CLI..."
 
-LATEST_REL_URL="https://github.com/platogo/atoss-cli/releases/download/latest/atoss-cli-standalone.jar"
+LATEST_REL_URL="https://github.com/platogo/atoss-cli/releases/download/0.1.1/atoss-cli-standalone.jar"
 LOCAL_JAR_FILE=$PWD/target/uberjar/atoss-cli-standalone.jar
 
 if [ -f "$LOCAL_JAR_FILE" ]; then
