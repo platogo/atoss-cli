@@ -83,6 +83,8 @@ This will build a fully self-contained JAR, ready to be run anywhere.
 
   - [ ] Add action to view logged time
   - [ ] Improve help menu
+  - [ ] Build native binary with [GraalVM Native Image](https://www.graalvm.org/reference-manual/native-image/)
+  - [ ] Automated time sheet export and upload for submission
 
 ## License
 

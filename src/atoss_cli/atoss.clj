@@ -63,6 +63,7 @@
   This is where all of the data entry must happen."
   [driver]
   (doto driver
+    (api/wait 2)
     (api/wait-visible nav-menu-btn)
     (api/click nav-menu-btn)
     (api/wait-visible zeitkorr-btn)
