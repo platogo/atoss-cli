@@ -1,17 +1,12 @@
 (ns atoss-cli.atoss
   "Functions related to interacting with ATOSS via WebDriver."
-  (:require [clojure.spec.alpha :as spec]
-            [clojure.edn :as edn]
-            [etaoin.api :as api]
-            [etaoin.keys :as keys])
+  (:require
+   [clojure.edn :as edn]
+   [etaoin.api :as api]
+   [etaoin.keys :as keys])
   (:gen-class))
 
 (def valid-day-codes #{"du" "nu" "rt" "sd" "ta" "th" "tp" "ts" "wh" "" nil})
-
-(spec/def :day/code (spec/or
-                     :code #{:du :nu :rt :sd :ta :th :tp :ts :wh}
-                     :empty nil?
-                     :empty-str #(= % "")))
 
 (def atoss-url "https://ases.novomatic.com/SES/html")
 
@@ -85,29 +80,26 @@
 (defn create-time-pair-entry
   "Create a new time entry as a combination of day code and a time pair for a given day."
   [driver {day-code :day-code start :start-time end :end-time}]
-  (if (spec/valid? :day/code (keyword day-code))
-    (do
-      (println (if (nil? day-code)
-                 "No day code provided"
-                 (str "Day code: " day-code)))
-      (doto driver
-        (api/click date-input)
-        (api/fill-active keys/tab)
-        (api/fill-active keys/tab)
-        (api/fill-active keys/tab)
-        (api/fill-active keys/tab))
-      (api/wait driver 3) ;; Do not touch waiters - if it is any less, the UI will not have enough time to update
-      (doto driver
-        (api/fill-active (if (nil? day-code) "" (name day-code)))
-        (api/fill-active keys/tab)
-        (api/wait 2)
-        (api/fill-active start)
-        (api/fill-active keys/tab)
-        (api/wait 2)
-        (api/fill-active end)
-        (api/fill-active keys/enter)
-        (api/wait 2)))
-    (spec/explain :day/code day-code)))
+  (println (if (nil? day-code)
+             "No day code provided"
+             (str "Day code: " day-code)))
+  (doto driver
+    (api/click date-input)
+    (api/fill-active keys/tab)
+    (api/fill-active keys/tab)
+    (api/fill-active keys/tab)
+    (api/fill-active keys/tab))
+  (api/wait driver 3) ;; Do not touch waiters - if it is any less, the UI will not have enough time to update
+  (doto driver
+    (api/fill-active (if (nil? day-code) "" (name day-code)))
+    (api/fill-active keys/tab)
+    (api/wait 2)
+    (api/fill-active start)
+    (api/fill-active keys/tab)
+    (api/wait 2)
+    (api/fill-active end)
+    (api/fill-active keys/enter)
+    (api/wait 2)))
 
 (defn creds-from-dotfile
   "Returns atoss credentials from dotfile in home directory."
