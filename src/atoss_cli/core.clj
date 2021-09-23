@@ -2,15 +2,14 @@
   "Entrypoint module for the ATOSS CLI."
   (:require [clojure.tools.cli :refer [parse-opts]]
             [atoss-cli.atoss :as atoss])
-  (:import (java.util Date) [java.text SimpleDateFormat])
+  (:import (java.util Date Collection) [java.text SimpleDateFormat])
   (:gen-class))
 
-(def desc "ATOSS CLI by Platogo Interactive Entertainment Gmbh.
-Authors: Daniils Petrovs")
+(def desc "ATOSS CLI by Platogo Interactive Entertainment Gmbh.")
 
 (def today-date (.format
-                 (java.text.SimpleDateFormat. "dd.MM.yyyy")
-                 (new java.util.Date)))
+                 (SimpleDateFormat. "dd.MM.yyyy")
+                 (new Date)))
 
 (def cli-options
   ;; An option with a required argument
@@ -29,7 +28,8 @@ Authors: Daniils Petrovs")
     :default 0
     :update-fn inc]
    ;; A boolean option defaulting to nil
-   ["-h" "--help"]])
+   ["-h" "--help" "Show this help printout."
+    :default false]])
 
 (defn log-time
   "Perform time logging with the given options."
@@ -48,9 +48,10 @@ Authors: Daniils Petrovs")
 
 (defn -main [& args]
   (println desc)
-  (let [{^java.util.Collection arguments :arguments
+  (let [{^Collection arguments :arguments
          summary :summary,
+         options :options,
          :as opts} (parse-opts args cli-options)]
-    (if (.contains arguments "help")
+    (if (or (.contains arguments "help") (options :help))
       (println summary)
       (log-time opts))))

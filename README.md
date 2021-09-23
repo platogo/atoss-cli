@@ -37,7 +37,7 @@ If you are unsure about available day codes, you can always check ATOSS manually
 You can always view the available arguments by typing
 
 ```bash
-atoss-cli help
+atoss-cli --help
 ```
 
 ### Requirements
