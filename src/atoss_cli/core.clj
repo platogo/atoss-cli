@@ -5,11 +5,19 @@
   (:import (java.util Date Collection) [java.text SimpleDateFormat])
   (:gen-class))
 
-(def desc "ATOSS CLI by Platogo Interactive Entertainment Gmbh.")
-
 (def today-date (.format
                  (SimpleDateFormat. "dd.MM.yyyy")
                  (new Date)))
+
+(def desc "ATOSS CLI by Platogo Interactive Entertainment Gmbh.
+Work seamlessly with ATOSS time sheets.")
+
+(def help-header "
+\033[1;37mUSAGE
+  atoss-cli <command> [args]
+
+\033[1;37mCOMMANDS
+  log:       Log time pair for today or a specific date")
 
 (def cli-options
   ;; An option with a required argument
@@ -30,6 +38,15 @@
    ;; A boolean option defaulting to nil
    ["-h" "--help" "Show this help printout."
     :default false]])
+
+(defn -print-help
+  [args-summary]
+  (print desc)
+  (newline)
+  (print help-header)
+  (newline)
+  (newline)
+  (print args-summary))
 
 (defn log-time
   "Perform time logging with the given options."
@@ -52,6 +69,7 @@
          summary :summary,
          options :options,
          :as opts} (parse-opts args cli-options)]
-    (if (or (.contains arguments "help") (options :help))
-      (println summary)
-      (log-time opts))))
+    (cond
+      (options :help) (-print-help summary)
+      (.contains arguments "log") (log-time opts)
+      :else (-print-help summary))))
