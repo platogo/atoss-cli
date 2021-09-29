@@ -17,7 +17,7 @@ else
 	if $(gh --version); then
 		# When Github CLI is installed
 		rm -f atoss-cli-standalone.jar
-		gh release download latest
+		gh release download --pattern "*.jar"
 		mv -f atoss-cli-standalone.jar $INSTALL_DIR
 	else
 		echo "Github CLI is not set up! Please visit http://cli.github.com/ for more details."
