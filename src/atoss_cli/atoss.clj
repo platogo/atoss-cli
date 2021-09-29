@@ -14,11 +14,60 @@
 (def nav-menu-btn {:css "#nav_menu"})
 (def nav-user-btn {:css "#nav_user"})
 
+(def month-overview-btn {:css "div.z-panelchildren > div.z-atossbutton:nth-of-type(1)"})
 (def zeitkorr-btn {:css "div.z-panelchildren > div.z-atossbutton:nth-of-type(4)"})
 (def logout-btn {:css ".z-logoutbutton"})
 
 (def update-btn {:css ".z-toolbarbutton:nth-of-type(1)"})
 (def date-input {:css ".z-datebox-input"})
+
+(defprotocol TimeSheetDay
+  (fmt-row [day]))
+
+(defrecord Day [date
+                day-of-week
+                comment
+                work-pattern
+                booking-code
+                day-code
+                start-time
+                start-time-correctness
+                end-time
+                end-time-correctness
+                time-logged
+                saldo
+                overtime]
+  TimeSheetDay (fmt-row
+                 [day]
+                 (apply format "%5s | %3s | %4s | %3s | %2s | %3s | %5s | %1s | %5s | %1s | %5s | %5s | %5s" (vals day))))
+
+(defn -max-row-cnt
+  [driver]
+  (count (api/query-tree driver {:css "div.slick-cell.l1.r1 > span"})))
+
+;; Used to build a dynamic selector of the correct cell in the month overview table.
+;; For example, row indexing starts with 1, with the first day being 3rd row
+;; Columns indexing starts with 0, with the first col being the date
+
+;; Monatsubersich columns
+
+;; l0 - date
+;; l1 - day of the week
+;; l2 - comment
+;; l3 - Arbeitsmuster
+;; l4 - internal status code (V - vacation, A! - unlogged day)
+;; l5 - day code (e.g. wh, empty etc.)
+;; l6 - start time
+;; l7 - st correctness
+;; l8 - end time
+;; l9 - et correctness
+;; l10 - time logged per day
+;; l11 - saldo
+;; l12 - overtime
+
+(defn -cell-selector
+  [row col]
+  {:css (format "div.ui-widget-content.slick-row:nth-child(%d) > div.slick-cell.l%d.r%d > span" row col col)})
 
 (defn setup-driver
   "Create a default driver instance to be used for interacting with ATOSS."
@@ -64,6 +113,17 @@
     (api/wait-visible zeitkorr-btn)
     (api/click zeitkorr-btn)
     (api/wait-visible {:tag :span :fn/has-text "Tagescode"})))
+
+(defn nav-to-month-overview
+  "Navigate the driver to the current month overview.
+  This is where every time pair can be parsed."
+  [driver]
+  (doto driver
+    (api/wait-visible nav-menu-btn)
+    (api/click nav-menu-btn)
+    (api/wait-visible month-overview-btn)
+    (api/click month-overview-btn)
+    (api/wait-visible {:css "div.slick-row"})))
 
 (defn set-date
   "Sets the day of the month in time correction that the time pair will be applied to."
