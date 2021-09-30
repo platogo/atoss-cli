@@ -81,7 +81,7 @@
     driver))
 
 (defn login
-  "Perform login into ATOSS dashboard using provided ATOSS credentials."
+  "Login into ATOSS dashboard using provided credentials."
   [driver {user :username pass :password}]
   (println "Logging into ATOSS with user: " user)
   (doto driver

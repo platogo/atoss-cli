@@ -49,7 +49,7 @@ Work seamlessly with ATOSS time sheets.")
   (print args-summary))
 
 (defn log-time
-  "Perform time logging with the given options."
+  "Log a time pair for a given day."
   [{opts :options}]
   (let [driver (atoss/setup-driver)
         creds (atoss/creds-from-dotfile)
@@ -63,13 +63,29 @@ Work seamlessly with ATOSS time sheets.")
       (atoss/end))
     (println "Logged time")))
 
+(defn show-month-overview
+  "Display the current month overview in the terminal."
+  []
+  (let [driver (atoss/setup-driver)
+        creds (atoss/creds-from-dotfile)]
+    (doto driver
+      (atoss/login creds)
+      (atoss/nav-to-month-overview))
+    (let [days (atoss/parse-month-table-rows driver)]
+      (println "\033[1;37mMonth overview:")
+      (newline)
+      (doseq [day days]
+        (-> day
+            (atoss/fmt-row)
+            (println))))))
+
 (defn -main [& args]
-  (println desc)
   (let [{^Collection arguments :arguments
          summary :summary,
          options :options,
          :as opts} (parse-opts args cli-options)]
     (cond
       (options :help) (-print-help summary)
-      (.contains arguments "log") (log-time opts)
+      (= (first arguments) "view") (show-month-overview)
+      (= (first arguments) "log") (log-time opts)
       :else (-print-help summary))))

@@ -1,4 +1,4 @@
-(defproject atoss-cli "0.1.3-SNAPSHOT"
+(defproject atoss-cli "0.2.0-SNAPSHOT"
   :description "A CLI tool for interacting with ATOSS time sheets"
   :url "https://github.com/platogo/atoss-cli"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
@@ -27,6 +27,8 @@
   :profiles {:uberjar {:aot :all
                        :native-image {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}}
   :plugins [[lein-cljfmt "0.8.0"]
+            [cider/cider-nrepl "0.26.0"]
             [io.taylorwood/lein-native-image "0.3.1"]]
   :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
-  :repl-options {:init-ns atoss-cli.core})
+  :repl-options {:init-ns atoss-cli.core
+                 :init (do (use 'etaoin.api) (require '[etaoin.keys :as keys]))})
