@@ -15,26 +15,51 @@ The file should be written in [EDN](https://github.com/edn-format/edn) with the 
 ```
 
 ```bash
-atoss-cli -s "9:15" -e "16:45" -d "16.09.2021"
-
+atoss-cli log -s "9:15" -e "16:45" -d "16.09.2021"
+ 
 ATOSS CLI by Platogo Interactive Entertainment Gmbh.
-  -d, --date DATE        17.09.2021  Date in the format DD.MM.YYYY, by default current date.
+Work seamlessly with ATOSS time sheets.
+
+USAGE
+  atoss-cli <command> [args]
+
+COMMANDS
+  log:       Log time pair for today or a specific date
+  view:      View month overview of logged time
+
+  -d, --date DATE        30.09.2021  Date in the format DD.MM.YYYY
   -c, --day-code CODE    nil         Valid ATOSS day code (e.g. wh for WFH) can also be left blank.
   -s, --start-time TIME  9:00        Work start time in the format HH:MM
   -e, --end-time TIME    17:00       Work end time in the format HH:MM
   -v                                 Verbosity level
-  -h, --help
+  -h, --help                         Show this help printout.%
 ```
 
 For example, if you were working from home today from `9:00` to `17:30`:
 
 ```bash
-atoss-cli -c wh -e "17:30"
+atoss-cli log -c wh -e "17:30"
 ```
 
 If you are unsure about available day codes, you can always check ATOSS manually.
 
-You can always view the available arguments by typing
+To view your time logged for the current month, you can use `atoss-cli view`:
+
+```bash
+atoss-cli view
+
+Logging into ATOSS with user:  1234567
+Logged in
+Month overview:
+
+01.09 |  Mi |    - | VGZ |    |     | 09:00 | k | 18:00 | k |  8:30 |  0:48 |
+02.09 |  Do |    - | VGZ |  V |     |       |   |       |   |  8:00 |  0:18 |
+03.09 |  Fr |    - | VGZ |  V |     |       |   |       |   |  8:00 |  0:18 |
+04.09 |  Sa |    - |  // |    |     |       |   |       |   |       |       |
+05.09 |  So |    - |  // |    |     |       |   |       |   |       |       |
+```
+
+You can always view the available commands and arguments by typing
 
 ```bash
 atoss-cli --help
@@ -68,6 +93,10 @@ If you did not build the uberjar locally, you must have the [Github CLI](https:/
 
 Make sure you are either in the office network or connected to the `banana` VPN.
 
+### Updating
+
+Simply run `./install.sh` again, and the latest release should be installed automatically.
+
 ### Build
 
 Simply run
@@ -82,8 +111,8 @@ This will build a fully self-contained JAR, ready to be run anywhere.
 
 ## Roadmap
 
-  - [ ] Add action to view logged time
-  - [ ] Improve help menu
+  - [x] Add action to view logged time
+  - [x] Improve help menu
   - [ ] Build native binary with [GraalVM Native Image](https://www.graalvm.org/reference-manual/native-image/)
   - [ ] Automated time sheet export and upload for submission
 

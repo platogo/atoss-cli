@@ -17,7 +17,8 @@ Work seamlessly with ATOSS time sheets.")
   atoss-cli <command> [args]
 
 \033[1;37mCOMMANDS
-  log:       Log time pair for today or a specific date")
+  log:       Log time pair for today or a specific date
+  view:      View month overview of logged time")
 
 (def cli-options
   ;; An option with a required argument
@@ -88,4 +89,5 @@ Work seamlessly with ATOSS time sheets.")
       (options :help) (-print-help summary)
       (= (first arguments) "view") (show-month-overview)
       (= (first arguments) "log") (log-time opts)
-      :else (-print-help summary))))
+      :else (-print-help summary))
+    (flush)))
