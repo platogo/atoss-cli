@@ -43,7 +43,9 @@
 
 (defn -max-row-cnt
   [driver]
-  (count (api/query-tree driver {:css "div.slick-cell.l1.r1 > span"})))
+  (-> driver
+      (api/query-tree {:css "div.slick-cell.l1.r1 > span"})
+      count))
 
 ;; Used to build a dynamic selector of the correct cell in the month overview table.
 ;; For example, row indexing starts with 1, with the first day being 3rd row
@@ -68,6 +70,8 @@
 (defn -cell-selector
   [row col]
   {:css (format "div.ui-widget-content.slick-row:nth-child(%d) > div.slick-cell.l%d.r%d > span" row col col)})
+
+;; Public API
 
 (defn setup-driver
   "Create a default driver instance to be used for interacting with ATOSS."
@@ -160,6 +164,16 @@
     (api/fill-active end)
     (api/fill-active keys/enter)
     (api/wait 2)))
+
+(defn parse-month-table-rows
+  "Parse day records from month overview. Returns a collection of Days."
+  [driver]
+  (let [first-row 3 last-row (- (-max-row-cnt driver) 3)]
+    (for [row (range first-row last-row)]
+      (let [col-vals (for [col (range 0 13)]
+                       (api/get-element-inner-html driver (-cell-selector row col)))
+            day (apply ->Day col-vals)]
+        day))))
 
 (defn creds-from-dotfile
   "Returns atoss credentials from dotfile in home directory."
