@@ -13,10 +13,10 @@
 Work seamlessly with ATOSS time sheets.")
 
 (def help-header "
-\033[1;37mUSAGE
+\033[1;37mUSAGE\u001b[0m
   atoss-cli <command> [args]
 
-\033[1;37mCOMMANDS
+\033[1;37mCOMMANDS\u001b[0m
   log:       Log time pair for today or a specific date
   view:      View month overview of logged time")
 
@@ -73,7 +73,7 @@ Work seamlessly with ATOSS time sheets.")
       (atoss/login creds)
       (atoss/nav-to-month-overview))
     (let [days (atoss/parse-month-table-rows driver)]
-      (println "\033[1;37mMonth overview:")
+      (println "\033[1;37mMonth overview:\u001b[0m")
       (newline)
       (doseq [day days]
         (-> day

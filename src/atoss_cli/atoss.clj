@@ -155,7 +155,7 @@
     (api/fill-active keys/tab))
   (api/wait driver 3) ;; Do not touch waiters - if it is any less, the UI will not have enough time to update
   (doto driver
-    (api/fill-active (if (nil? day-code) "" (name day-code)))
+    (api/fill-active (if (nil? day-code) " " day-code))
     (api/fill-active keys/tab)
     (api/wait 2)
     (api/fill-active start)
@@ -168,8 +168,10 @@
 (defn parse-month-table-rows
   "Parse day records from month overview. Returns a collection of Days."
   [driver]
-  (let [first-row 3 last-row (- (-max-row-cnt driver) 3)]
-    (for [row (range first-row last-row)]
+  (let [first-row 3
+        last-row (- (-max-row-cnt driver) 3)
+        rows (range first-row last-row)]
+    (for [row rows]
       (let [col-vals (for [col (range 0 13)]
                        (api/get-element-inner-html driver (-cell-selector row col)))
             day (apply ->Day col-vals)]
