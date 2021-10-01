@@ -1,8 +1,9 @@
 (ns atoss-cli.core
   "Entrypoint module for the ATOSS CLI."
-  (:require [clojure.tools.cli :refer [parse-opts]]
-            [atoss-cli.atoss :as atoss]
-            [atoss-cli.cli :as cli])
+  (:require
+   [clojure.tools.cli :refer [parse-opts]]
+   [atoss-cli.atoss :as atoss]
+   [atoss-cli.cli :as cli])
   (:import (java.util Collection))
   (:gen-class))
 
@@ -43,6 +44,7 @@
          options :options,
          :as opts} (parse-opts args cli/options)]
     (cond
+      (options :version) (cli/print-project-ver)
       (options :help) (cli/print-help summary)
       (= (first arguments) "view") (show-month-overview)
       (= (first arguments) "log") (log-time opts)

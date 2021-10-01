@@ -1,7 +1,9 @@
 (ns atoss-cli.cli
-  (:require [atoss-cli.atoss :refer [valid-day-codes]])
+  (:require
+   [clojure.java.io :as io]
+   [atoss-cli.atoss :refer [valid-day-codes]])
   (:import (java.text SimpleDateFormat)
-           (java.util Date)))
+           (java.util Date Properties)))
 
 (def today-date (.format
                  (SimpleDateFormat. "dd.MM.yyyy")
@@ -17,6 +19,13 @@ Work seamlessly with ATOSS time sheets.")
 \033[1;37mCOMMANDS\u001b[0m
   log:       Log time pair for today or a specific date
   view:      View month overview of logged time")
+
+(defn read-project-version []
+  (-> (doto (Properties.)
+        (.load (-> "META-INF/maven/atoss-cli/atoss-cli/pom.properties"
+                   (io/resource)
+                   (io/reader))))
+      (.get "version")))
 
 (def options
   ;; An option with a required argument
@@ -34,6 +43,8 @@ Work seamlessly with ATOSS time sheets.")
     :id :verbosity
     :default 0
     :update-fn inc]
+   [nil "--version" "Print CLI version"
+    :default false]
    ;; A boolean option defaulting to nil
    ["-h" "--help" "Show this help printout."
     :default false]])
@@ -46,3 +57,6 @@ Work seamlessly with ATOSS time sheets.")
   (newline)
   (newline)
   (print args-summary))
+
+(defn print-project-ver []
+  (println (format "Version: %s" (read-project-version))))
