@@ -116,6 +116,22 @@ This will build a fully self-contained JAR, ready to be run anywhere.
   - [ ] Build native binary with [GraalVM Native Image](https://www.graalvm.org/reference-manual/native-image/)
   - [ ] Automated time sheet export and upload for submission
 
+## Troubleshooting
+
+### Chromedriver does not start
+
+This is a fairly common issue due to the security model of macOS. It is likely that after an update of `chromedriver`, it needs to be explicitly granted permissions again.
+
+After it tries to launch, make sure to press `Allow` in `System Preferences > Security & Privacy`
+
+![security](./security.png)
+
+### View command fails
+
+This is an issue with ATOSS remembering the time range you have selected in Monthly Overview.
+
+If you run `atoss-cli view`, the day range should match the current month. This will be fixed in a future update.
+
 ## License
 
 Copyright © 2021 Daniils Petrovs Platogo Interactive Entertainment Gmbh.
