@@ -1,5 +1,7 @@
 # About
 
+[![Clojure CI](https://github.com/platogo/atoss-cli/actions/workflows/clojure.yml/badge.svg)](https://github.com/platogo/atoss-cli/actions/workflows/clojure.yml)
+
 A Clojure CLI tool designed to interact with ATOSS. 
 
 ## Usage
