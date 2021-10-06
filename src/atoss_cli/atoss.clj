@@ -182,4 +182,6 @@
   []
   (let [dotfile-name ".atoss"
         dotfile-path (str (System/getProperty "user.home") "/" dotfile-name)]
-    (-> dotfile-path (slurp) (edn/read-string))))
+    (try
+      (-> dotfile-path (slurp) (edn/read-string))
+      (catch Exception _e (println "Failed to read credentials, make sure .atoss file exists!")))))
