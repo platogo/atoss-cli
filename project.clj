@@ -27,7 +27,7 @@
   :profiles {:uberjar {:aot :all
                        :native-image {:jvm-opts ["-Dclojure.compiler.direct-linking=true"]}}}
   :plugins [[lein-cljfmt "0.8.0"]
-            [cider/cider-nrepl "0.26.0"]
+            [cider/cider-nrepl "0.27.2"]
             [io.taylorwood/lein-native-image "0.3.1"]]
   :jvm-opts ["-Dclojure.compiler.direct-linking=true"]
   :repl-options {:init-ns atoss-cli.core

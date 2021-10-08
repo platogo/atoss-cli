@@ -3,7 +3,8 @@
    [clojure.java.io :as io]
    [atoss-cli.atoss :refer [valid-day-codes]])
   (:import (java.text SimpleDateFormat)
-           (java.util Date Properties)))
+           (java.util Date Properties))
+  (:gen-class))
 
 (def today-date (.format
                  (SimpleDateFormat. "dd.MM.yyyy")

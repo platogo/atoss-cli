@@ -74,11 +74,12 @@
 ;; Public API
 
 (defn setup-driver
-  "Create a default driver instance to be used for interacting with ATOSS."
-  []
-  (let [driver (api/chrome-headless)]
-    (api/set-window-size driver 1200 800)
-    driver))
+  "Create a default driver instance to be used for interacting with ATOSS. Headless by default."
+  ([] (setup-driver true))
+  ([headless?]
+   (let [driver (api/chrome {:headless headless?})]
+     (api/set-window-size driver 1200 800)
+     driver)))
 
 (defn login
   "Login into ATOSS dashboard using provided credentials."
@@ -147,12 +148,9 @@
   (println (if (nil? day-code)
              "No day code provided"
              (str "Day code: " day-code)))
-  (doto driver
-    (api/click date-input)
-    (api/fill-active keys/tab)
-    (api/fill-active keys/tab)
-    (api/fill-active keys/tab)
-    (api/fill-active keys/tab))
+  (api/click driver date-input)
+  (dotimes [_i 4]
+    (api/fill-active driver keys/tab))
   (api/wait driver 3) ;; Do not touch waiters - if it is any less, the UI will not have enough time to update
   (doto driver
     (api/fill-active (if (nil? day-code) " " day-code))
