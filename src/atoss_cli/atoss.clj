@@ -84,7 +84,7 @@
 (defn login
   "Login into ATOSS dashboard using provided credentials."
   [driver {user :username pass :password}]
-  (println "Logging into ATOSS with user: " user)
+  (println "Logging into ATOSS with user: " (subs user 3) "***")
   (doto driver
     (api/go atoss-url)
     (api/switch-frame :applicationIframe)
