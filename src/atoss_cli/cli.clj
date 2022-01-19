@@ -6,10 +6,6 @@
            (java.util Date Properties))
   (:gen-class))
 
-(def today-date (.format
-                 (SimpleDateFormat. "dd.MM.yyyy")
-                 (new Date)))
-
 (def desc "ATOSS CLI by Platogo Interactive Entertainment Gmbh.
 Work seamlessly with ATOSS time sheets.")
 
@@ -21,6 +17,13 @@ Work seamlessly with ATOSS time sheets.")
   log:       Log time pair for today or a specific date
   view:      View month overview of logged time")
 
+(defn today-date
+  "Get today's date."
+  []
+  (.format
+   (SimpleDateFormat. "dd.MM.yyyy")
+   (new Date)))
+
 (defn read-project-version []
   (-> (doto (Properties.)
         (.load (-> "META-INF/maven/atoss-cli/atoss-cli/pom.properties"
@@ -31,7 +34,7 @@ Work seamlessly with ATOSS time sheets.")
 (def options
   ;; An option with a required argument
   [["-d" "--date DATE" "Date in the format DD.MM.YYYY"
-    :default today-date] ;; FIXME: Add validation
+    :default (today-date)] ;; FIXME: Add validation
    ["-c" "--day-code CODE" "Valid ATOSS day code (e.g. wh for WFH) can also be left blank."
     :default nil
     :validate [#(contains? valid-day-codes %) "Must be a valid ATOSS time code."]]
