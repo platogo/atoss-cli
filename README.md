@@ -4,7 +4,42 @@
 
 A Clojure CLI tool designed to interact with ATOSS. 
 
+<!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
+**Table of Contents**
+
+- [About](#about)
+    - [Usage](#usage)
+        - [Prerequisite](#prerequisite)
+        - [Requirements](#requirements)
+        - [Installation](#installation)
+        - [Updating](#updating)
+    - [Development](#development)
+        - [Build](#build)
+    - [Roadmap](#roadmap)
+    - [Troubleshooting](#troubleshooting)
+        - [Chromedriver does not start](#chromedriver-does-not-start)
+        - [View command fails](#view-command-fails)
+    - [License](#license)
+
+<!-- markdown-toc end -->
+
 ## Usage
+
+To log time for the current day from 9:30 to 18:00:
+
+```bash
+atoss-cli log -s 9:30 -e 18:00
+```
+
+You can also specify a day code (e.g. `wh` for a WFH day):
+
+```bash
+atoss-cli log -c wh -e "17:30"
+```
+
+If you are unsure about available day codes, you can always check ATOSS manually.
+
+To view the full list of options, call `atoss-cli -h`
 
 ### Prerequisite
 
@@ -15,35 +50,6 @@ The file should be written in [EDN](https://github.com/edn-format/edn) with the 
 ```edn
 {:username "1234567", :password "blablabla"}
 ```
-
-```bash
-atoss-cli log -s "9:15" -e "16:45" -d "16.09.2021"
- 
-ATOSS CLI by Platogo Interactive Entertainment Gmbh.
-Work seamlessly with ATOSS time sheets.
-
-USAGE
-  atoss-cli <command> [args]
-
-COMMANDS
-  log:       Log time pair for today or a specific date
-  view:      View month overview of logged time
-
-  -d, --date DATE        30.09.2021  Date in the format DD.MM.YYYY
-  -c, --day-code CODE    nil         Valid ATOSS day code (e.g. wh for WFH) can also be left blank.
-  -s, --start-time TIME  9:00        Work start time in the format HH:MM
-  -e, --end-time TIME    17:00       Work end time in the format HH:MM
-  -v                                 Verbosity level
-  -h, --help                         Show this help printout.%
-```
-
-For example, if you were working from home today from `9:00` to `17:30`:
-
-```bash
-atoss-cli log -c wh -e "17:30"
-```
-
-If you are unsure about available day codes, you can always check ATOSS manually.
 
 To view your time logged for the current month, you can use `atoss-cli view`:
 
@@ -61,18 +67,29 @@ Month overview:
 05.09 |  So |    - |  // |    |     |       |   |       |   |       |       |
 ```
 
-You can always view the available commands and arguments by typing
-
-```bash
-atoss-cli --help
-```
-
 ### Requirements
 
-- `Java Runtime Environment` (at least version 8), I recommend using [Jabba](https://github.com/shyiko/jabba)
-- Up to date `chromedriver` and Google Chrome. Download it manually from the [official page](https://chromedriver.chromium.org/downloads) for your operating system, or install it using your package manager
+- `Java Runtime Environment` (at least version 8), I recommend using [Jabba](https://github.com/shyiko/jabba) or Homebrew
+- Up to date `chromedriver`. Download it manually from the [official page](https://chromedriver.chromium.org/downloads) for your operating system, or install it using your package manager
+- Google Chrome (up to date) or Chromium
 
-For development, you will need:
+If you are on macOS, this is as easy as `brew install chromedriver openjdk`
+
+### Installation
+
+Clone this repository and run [install.sh](./install.sh).
+
+If you did not build the uberjar locally, you must have the [Github CLI](https://cli.github.com) installed.
+
+Make sure you are either in the office network or connected to the `banana` VPN.
+
+### Updating
+
+Simply run `./install.sh` again, and the latest release should be installed automatically.
+
+## Development
+
+For **development**, you will need:
 
 - [Clojure](https://clojure.org/guides/getting_started)
 - [Leiningen](https://leiningen.org)
@@ -86,18 +103,6 @@ Compile the project with `lein compile`
 Run using `lein run` or with an interactive REPL: `lein repl`
 
 Run all tests using `lein test`
-
-### Installation
-
-Clone this repository and run [install.sh](./install.sh).
-
-If you did not build the uberjar locally, you must have the [Github CLI](https://cli.github.com) installed.
-
-Make sure you are either in the office network or connected to the `banana` VPN.
-
-### Updating
-
-Simply run `./install.sh` again, and the latest release should be installed automatically.
 
 ### Build
 
