@@ -5,7 +5,7 @@
             :url "https://www.eclipse.org/legal/epl-2.0/"}
   :main ^:skip-aot atoss-cli.core
   :min-lein-version "2.0.0"
-  :dependencies [[org.clojure/clojure "1.10.3"]
+  :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/tools.cli "1.0.206"]
                  [etaoin "0.4.6"]
                  [com.github.clj-easy/graal-build-time "0.1.4"]]
