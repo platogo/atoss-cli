@@ -14,8 +14,7 @@ Work seamlessly with ATOSS time sheets.")
   atoss-cli <command> [args]
 
 \033[1;37mCOMMANDS\u001b[0m
-  log:       Log time pair for today or a specific date
-  view:      View month overview of logged time")
+  log:       Log time pair for today or a specific date")
 
 (defn today-date
   "Get today's date."

@@ -145,6 +145,7 @@
 (defn create-time-pair-entry
   "Create a new time entry as a combination of day code and a time pair for a given day."
   [driver {day-code :day-code start :start-time end :end-time}]
+
   (println (if (nil? day-code)
              "No day code provided"
              (str "Day code: " day-code)))
@@ -183,3 +184,5 @@
     (try
       (-> dotfile-path (slurp) (edn/read-string))
       (catch Exception _e (println "Failed to read credentials, make sure .atoss file exists!")))))
+
+

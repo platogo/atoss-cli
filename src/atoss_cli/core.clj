@@ -13,15 +13,18 @@
   (let [driver (atoss/setup-driver)
         creds (atoss/creds-from-dotfile)
         {date :date} opts]
-    (doto driver
-      (atoss/login creds)
-      (atoss/nav-to-time-correction)
-      (atoss/set-date date)
-      (atoss/create-time-pair-entry opts)
-      (atoss/logout)
-      (atoss/end))
-    (println "Logged time")))
+    (try
+      (doto driver
+        (atoss/login creds)
+        (atoss/nav-to-time-correction)
+        (atoss/set-date date)
+        (atoss/create-time-pair-entry opts)
+        (atoss/logout)
+        (atoss/end))
+      (println "Logged time")
+      (catch Exception e (println (.getMessage e))))))
 
+;; FIXME: very brittle so disabled for now
 (defn show-month-overview
   "Display the current month overview in the terminal."
   []
@@ -46,7 +49,6 @@
     (cond
       (options :version) (cli/print-project-ver)
       (options :help) (cli/print-help summary)
-      (= (first arguments) "view") (show-month-overview)
       (= (first arguments) "log") (log-time opts)
       :else (cli/print-help summary))
     (flush)))
