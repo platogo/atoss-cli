@@ -12,6 +12,8 @@ A Clojure CLI tool designed to interact with ATOSS.
         - [Prerequisite](#prerequisite)
         - [Requirements](#requirements)
         - [Installation](#installation)
+            - [Automatic](#automatic)
+            - [Manually](#manually)
         - [Updating](#updating)
     - [Development](#development)
         - [Build](#build)
@@ -31,7 +33,7 @@ To log time for the current day from 9:30 to 18:00:
 atoss-cli log -s 9:30 -e 18:00
 ```
 
-You can also specify a day code (e.g. `wh` for a WFH day):
+You can also specify a day code (e.g. `wh` for a Work From Home (WFH) day):
 
 ```bash
 atoss-cli log -c wh -e "17:30"
@@ -45,43 +47,35 @@ To view the full list of options, call `atoss-cli -h`
 
 Create a text file named `.atoss` in your home directory (e.g. `~/.atoss`).
 
-The file should be written in [EDN](https://github.com/edn-format/edn) with the following content:
+The file should be written in [EDN](https://github.com/edn-format/edn) with the following contents (your ATOSS username and password):
 
 ```edn
 {:username "1234567", :password "blablabla"}
 ```
 
-To view your time logged for the current month, you can use `atoss-cli view`:
-
-```bash
-atoss-cli view
-
-Logging into ATOSS with user:  1234567
-Logged in
-Month overview:
-
-01.09 |  Mi |    - | VGZ |    |     | 09:00 | k | 18:00 | k |  8:30 |  0:48 |
-02.09 |  Do |    - | VGZ |  V |     |       |   |       |   |  8:00 |  0:18 |
-03.09 |  Fr |    - | VGZ |  V |     |       |   |       |   |  8:00 |  0:18 |
-04.09 |  Sa |    - |  // |    |     |       |   |       |   |       |       |
-05.09 |  So |    - |  // |    |     |       |   |       |   |       |       |
-```
-
 ### Requirements
 
-- `Java Runtime Environment` (at least version 8), I recommend using [Jabba](https://github.com/shyiko/jabba) or Homebrew
-- Up to date `chromedriver`. Download it manually from the [official page](https://chromedriver.chromium.org/downloads) for your operating system, or install it using your package manager
+- `Java Runtime Environment` (at least version 8), I recommend using [Jabba](https://github.com/shyiko/jabba) or Homebrew (`brew install openjdk`)
+- Up to date `chromedriver`. Download it manually from the [official page](https://chromedriver.chromium.org/downloads) for your operating system, or install it using your package manager (e.g. `brew install chromedriver`)
 - Google Chrome (up to date) or Chromium
 
 If you are on macOS, this is as easy as `brew install chromedriver openjdk`
 
 ### Installation
 
+#### Automatic
+
 Clone this repository and run [install.sh](./install.sh).
 
 If you did not build the uberjar locally, you must have the [Github CLI](https://cli.github.com) installed.
 
-Make sure you are either in the office network or connected to the `banana` VPN.
+#### Manually
+
+Download the latest release JAR from [Release](https://github.com/platogo/atoss-cli/releases) and save it somewhere. Then simply run it:
+
+```bash
+java -jar atoss-cli-standalone.jar -h
+```
 
 ### Updating
 
@@ -118,11 +112,11 @@ This will build a fully self-contained JAR, ready to be run anywhere.
 
 ## Roadmap
 
-  - [x] Add action to view logged time
   - [x] Improve help menu
   - [ ] Build native binary with [GraalVM Native Image](https://www.graalvm.org/reference-manual/native-image/)
   - [ ] Automated time sheet export and upload for submission
-
+  - [ ] Multiple time pairs for a single day support
+  
 ## Troubleshooting
 
 ### Chromedriver does not start
@@ -141,7 +135,7 @@ If you run `atoss-cli view`, the day range should match the current month. This 
 
 ## License
 
-Copyright © 2021 Daniils Petrovs Platogo Interactive Entertainment Gmbh.
+Copyright © 2021 Daniils Petrovs @ Platogo Interactive Entertainment Gmbh.
 
 This program and the accompanying materials are made available under the
 terms of the Eclipse Public License 2.0 which is available at
