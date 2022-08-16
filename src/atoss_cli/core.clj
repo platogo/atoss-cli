@@ -2,39 +2,40 @@
   "Entrypoint module for the ATOSS CLI."
   (:require
    [clojure.tools.cli :refer [parse-opts]]
+   [clojure.term.colors :refer [bold green red]]
    [atoss-cli.atoss :as atoss]
    [atoss-cli.cli :as cli])
   (:import (java.util Collection))
   (:gen-class))
 
 (defn log-time
-  "Log a time pair for a given day."
+  "Log a time pair for a given date."
   [{opts :options}]
   (let [driver (atoss/setup-driver)
         creds (atoss/creds-from-dotfile)
         {date :date} opts]
     (try
       (doto driver
-        (atoss/login creds)
+        (atoss/login creds opts)
         (atoss/nav-to-time-correction)
         (atoss/set-date date)
         (atoss/create-time-pair-entry opts)
-        (atoss/logout)
+        (atoss/logout opts)
         (atoss/end))
-      (println "Logged time")
-      (catch Exception e (println (.getMessage e))))))
+      (println (green "Logged time for date: " date))
+      (catch Exception e (println (red (.getMessage e)))))))
 
 ;; FIXME: very brittle so disabled for now
 (defn show-month-overview
   "Display the current month overview in the terminal."
-  []
+  [{opts :options}]
   (let [driver (atoss/setup-driver)
         creds (atoss/creds-from-dotfile)]
     (doto driver
-      (atoss/login creds)
+      (atoss/login creds opts)
       (atoss/nav-to-month-overview))
     (let [days (atoss/parse-month-table-rows driver)]
-      (println "\033[1;37mMonth overview:\u001b[0m")
+      (println (bold "Month overview:"))
       (newline)
       (doseq [day days]
         (-> day
@@ -45,10 +46,11 @@
   (let [{^Collection arguments :arguments
          summary :summary,
          options :options,
-         :as opts} (parse-opts args cli/options)]
+         :as opts} (parse-opts args cli/options)
+        command (first arguments)]
     (cond
       (options :version) (cli/print-project-ver)
       (options :help) (cli/print-help summary)
-      (= (first arguments) "log") (log-time opts)
+      (= command "log") (log-time opts)
       :else (cli/print-help summary))
     (flush)))

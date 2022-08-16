@@ -7,6 +7,8 @@
    [etaoin.keys :as keys])
   (:gen-class))
 
+(comment "Various ATOSS web interface selectors.")
+
 (def valid-day-codes #{"du" "nu" "rt" "sd" "ta" "th" "tp" "ts" "wh" "" nil})
 
 (def atoss-url "https://ases.novomatic.com/SES/html")
@@ -84,8 +86,9 @@
 
 (defn login
   "Login into ATOSS dashboard using provided credentials."
-  [driver {user :username pass :password}]
-  (println "Logging into ATOSS with user: " (subs user 3) "***")
+  [driver {user :username pass :password} {verbosity :verbosity}]
+  (when (> verbosity 0)
+    (println "Logging into ATOSS with user: " (subs user 3) "***"))
   (doto driver
     (api/go atoss-url)
     (api/switch-frame :applicationIframe)
@@ -95,11 +98,15 @@
     (api/fill-active keys/tab)
     (api/fill-active pass)
     (api/fill-active keys/enter))
-  (println "Logged in"))
+
+  (when (> verbosity 0)
+    (println "Logged in")))
 
 (defn logout
-  [driver]
-  (println "Logging out of ATOSS")
+  [driver {verbosity :verbosity}]
+  (when (> verbosity 0)
+    (println "Logging out of ATOSS"))
+
   (doto driver
     (api/click nav-user-btn)
     (api/click logout-btn)))
@@ -145,17 +152,21 @@
 
 (defn create-time-pair-entry
   "Create a new time entry as a combination of day code and a time pair for a given day."
-  [driver {day-code :day-code start :start-time end :end-time}]
+  [driver {day-code :day-code
+           start :start-time
+           end :end-time
+           verbosity :verbosity}]
+  (when (> verbosity 0)
+    (println (if (= day-code " ")
+               "No day code provided"
+               (str "Day code: " day-code))))
 
-  (println (if (nil? day-code)
-             "No day code provided"
-             (str "Day code: " day-code)))
   (api/click driver date-input)
   (dotimes [_i 4]
     (api/fill-active driver keys/tab))
   (api/wait driver 3) ;; Do not touch waiters - if it is any less, the UI will not have enough time to update
   (doto driver
-    (api/fill-active (if (nil? day-code) " " day-code))
+    (api/fill-active day-code)
     (api/fill-active keys/tab)
     (api/wait 2)
     (api/fill-active start)

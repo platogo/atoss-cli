@@ -1,4 +1,4 @@
-(defproject atoss-cli "0.3.0-SNAPSHOT"
+(defproject atoss-cli "0.3.1-SNAPSHOT"
   :description "A CLI tool for interacting with ATOSS time sheets"
   :url "https://github.com/platogo/atoss-cli"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
@@ -8,6 +8,8 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/tools.cli "1.0.206"]
                  [etaoin "0.4.6"]
+                 [com.github.pmonks/spinner "2.0.120"]
+                 [clojure-term-colors "0.1.0"]
                  [com.github.clj-easy/graal-build-time "0.1.4"]]
   :target-path "target/%s"
   :jar-name "atoss-cli.jar"

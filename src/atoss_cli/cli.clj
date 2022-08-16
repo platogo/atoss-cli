@@ -1,20 +1,27 @@
 (ns atoss-cli.cli
   (:require
    [clojure.java.io :as io]
-   [atoss-cli.atoss :refer [valid-day-codes]])
+   [atoss-cli.atoss :refer [valid-day-codes]]
+   [clojure.term.colors :refer [bold]])
   (:import (java.text SimpleDateFormat)
            (java.util Date Properties))
   (:gen-class))
 
+(comment
+  "This handles all CLI related parts of the ATOSS CLI, such as printing, parsing arguments etc.")
+
 (def desc "ATOSS CLI by Platogo Interactive Entertainment Gmbh.
 Work seamlessly with ATOSS time sheets.")
 
-(def help-header "
-\033[1;37mUSAGE\u001b[0m
+(def help-header
+  (str
+   (bold "USAGE") "
   atoss-cli <command> [args]
 
-\033[1;37mCOMMANDS\u001b[0m
-  log:       Log time pair for today or a specific date")
+"
+   (bold "COMMANDS")
+   "
+  log:       Log time pair for today or a specific date"))
 
 (defn today-date
   "Get today's date."
@@ -37,7 +44,7 @@ Work seamlessly with ATOSS time sheets.")
   [["-d" "--date DATE" "Date in the format DD.MM.YYYY"
     :default (today-date)] ;; FIXME: Add validation
    ["-c" "--day-code CODE" "Valid ATOSS day code (e.g. wh for WFH) can also be left blank."
-    :default nil
+    :default " "
     :validate [#(contains? valid-day-codes %) "Must be a valid ATOSS time code."]]
    ["-s" "--start-time TIME" "Work start time in the format HH:MM"
     :default "9:00"]
@@ -57,6 +64,7 @@ Work seamlessly with ATOSS time sheets.")
 (defn print-help
   [args-summary]
   (print desc)
+  (newline)
   (newline)
   (print help-header)
   (newline)
