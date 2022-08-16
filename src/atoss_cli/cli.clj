@@ -25,9 +25,11 @@ Work seamlessly with ATOSS time sheets.")
 
 (defn read-project-version []
   (-> (doto (Properties.)
-        (.load (-> "META-INF/maven/atoss-cli/atoss-cli/pom.properties"
-                   (io/resource)
-                   (io/reader))))
+        (.load (->
+                (io/file "META-INF" "maven" "atoss-cli" "atoss-cli" "pom.properties")
+                (.getPath)
+                (io/resource)
+                (io/reader))))
       (.get "version")))
 
 (def options
