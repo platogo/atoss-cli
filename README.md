@@ -16,7 +16,6 @@ A Clojure CLI tool designed to interact with ATOSS.
             - [Manually](#manually)
         - [Updating](#updating)
     - [Development](#development)
-        - [Build](#build)
     - [Roadmap](#roadmap)
     - [Troubleshooting](#troubleshooting)
         - [Chromedriver does not start](#chromedriver-does-not-start)
@@ -27,7 +26,7 @@ A Clojure CLI tool designed to interact with ATOSS.
 
 ## Usage
 
-To log time for the current day from 9:30 to 18:00:
+To log time for the current day from `9:30` to `18:00`:
 
 ```bash
 atoss-cli log -s 9:30 -e 18:00
@@ -83,32 +82,7 @@ Simply run `./install.sh` again, and the latest release should be installed auto
 
 ## Development
 
-For **development**, you will need:
-
-- [Clojure](https://clojure.org/guides/getting_started)
-- [Leiningen](https://leiningen.org)
-
-I strongly recommend using a combination of Emacs, [Clojure-LSP](https://clojure-lsp.io) and [CIDER](https://docs.cider.mx/cider/index.html).
-
-Fetch deps with `lein deps`
-
-Compile the project with `lein compile`
-
-Run using `lein run` or with an interactive REPL: `lein repl`
-
-Run all tests using `lein test`
-
-### Build
-
-Simply run
-
-```bash
-
-lein uberjar
-
-```
-
-This will build a fully self-contained JAR, ready to be run anywhere.
+Check out [DEVELOPMENT.md](./DEVELOPMENT.md)
 
 ## Roadmap
 
@@ -116,6 +90,7 @@ This will build a fully self-contained JAR, ready to be run anywhere.
   - [ ] Build native binary with [GraalVM Native Image](https://www.graalvm.org/reference-manual/native-image/)
   - [ ] Automated time sheet export and upload for submission
   - [ ] Multiple time pairs for a single day support
+  - [ ] Windows support
   
 ## Troubleshooting
 
