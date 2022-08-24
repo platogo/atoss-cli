@@ -5,12 +5,12 @@ PWD=$(pwd)
 
 echo "Installing ATOSS CLI..."
 
-LOCAL_JAR_FILE=$PWD/target/uberjar/atoss-cli-standalone.jar
+LOCAL_JAR_FILE=$PWD/target/default+uberjar/atoss-cli-standalone.jar
 INSTALL_DIR=/usr/local/bin/
 
 if [ -f "$LOCAL_JAR_FILE" ]; then
     echo "Local uberjar exists, skipping pull from remote."
-	cp -f $PWD/target/uberjar/atoss-cli-standalone.jar $INSTALL_DIR
+	cp -f "$LOCAL_JAR_FILE" "$INSTALL_DIR"
 else
     echo "$LOCAL_JAR_FILE does not exist, pulling release from Github."
 
