@@ -8,7 +8,7 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/tools.cli "1.0.206"]
                  [etaoin "0.4.6"]
-                 [com.github.pmonks/spinner "2.0.120"]
+                 [com.github.pmonks/spinner "2.0.190"]
                  [clojure-term-colors "0.1.0"]
                  [com.github.clj-easy/graal-build-time "0.1.4"]]
   :target-path "target/%s"

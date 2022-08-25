@@ -3,6 +3,7 @@
   (:require
    [clojure.tools.cli :refer [parse-opts]]
    [clojure.term.colors :refer [bold green red]]
+   [progress.indeterminate :as pi]
    [atoss-cli.atoss :as atoss]
    [atoss-cli.cli :as cli])
   (:import (java.util Collection))
@@ -15,15 +16,22 @@
         creds (atoss/creds-from-dotfile)
         {date :date} opts]
     (try
-      (doto driver
-        (atoss/login creds opts)
-        (atoss/nav-to-time-correction)
-        (atoss/set-date date)
-        (atoss/create-time-pair-entry opts)
-        (atoss/logout opts)
-        (atoss/end))
-      (println (green "Logged time for date: " date))
-      (catch Exception e (println (red (.getMessage e)))))))
+      (println (green "Logging time..."))
+      (pi/animate!
+       (doto driver
+         (atoss/login creds opts)
+         (atoss/nav-to-time-correction)
+         (atoss/set-date date)
+         (atoss/create-time-pair-entry opts)
+         (atoss/logout opts)
+         (atoss/end))
+       (pi/print (green "Logged time for date: " date))
+       (shutdown-agents))
+
+      (catch Exception e (-> e
+                             (.getMessage)
+                             (red)
+                             (println))))))
 
 ;; FIXME: very brittle so disabled for now
 (defn show-month-overview

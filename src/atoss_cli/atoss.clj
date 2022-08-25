@@ -112,6 +112,7 @@
     (api/click logout-btn)))
 
 (defn end
+  "Quit the driver session."
   [driver]
   (api/quit driver))
 
