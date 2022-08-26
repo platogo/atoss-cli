@@ -8,19 +8,19 @@ A Clojure CLI tool designed to interact with ATOSS.
 **Table of Contents**
 
 - [About](#about)
-    - [Usage](#usage)
-        - [Prerequisite](#prerequisite)
-        - [Requirements](#requirements)
-        - [Installation](#installation)
-            - [Automatic](#automatic)
-            - [Manually](#manually)
-        - [Updating](#updating)
-    - [Development](#development)
-    - [Roadmap](#roadmap)
-    - [Troubleshooting](#troubleshooting)
-        - [Chromedriver does not start](#chromedriver-does-not-start)
-        - [View command fails](#view-command-fails)
-    - [License](#license)
+  - [Usage](#usage)
+    - [Prerequisite](#prerequisite)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+      - [Automatic](#automatic)
+      - [Manually](#manually)
+    - [Updating](#updating)
+  - [Development](#development)
+  - [Roadmap](#roadmap)
+  - [Troubleshooting](#troubleshooting)
+    - [Chromedriver does not start](#chromedriver-does-not-start)
+    - [View command fails](#view-command-fails)
+  - [License](#license)
 
 <!-- markdown-toc end -->
 
@@ -66,8 +66,6 @@ If you are on macOS, this is as easy as `brew install chromedriver openjdk`
 
 Clone this repository and run [install.sh](./install.sh).
 
-If you did not build the uberjar locally, you must have the [Github CLI](https://cli.github.com) installed.
-
 #### Manually
 
 Download the latest release JAR from [Release](https://github.com/platogo/atoss-cli/releases) and save it somewhere. Then simply run it:
@@ -90,7 +88,7 @@ Check out [DEVELOPMENT.md](./DEVELOPMENT.md)
   - [ ] Build native binary with [GraalVM Native Image](https://www.graalvm.org/reference-manual/native-image/)
   - [ ] Automated time sheet export and upload for submission
   - [ ] Multiple time pairs for a single day support
-  - [ ] Windows support
+  - [x] Windows support
   
 ## Troubleshooting
 
