@@ -21,7 +21,10 @@ Work seamlessly with ATOSS time sheets.")
 "
    (c/bold "COMMANDS")
    "
-  log:       Log time pair for today or a specific date"))
+  log:                     Log time pair for today or a specific date
+  config init:             Initialize the configuration
+  config set <key> <val>:  Set a custom configuration value
+"))
 
 (defn today-date
   "Get today's date."

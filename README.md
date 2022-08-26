@@ -8,19 +8,19 @@ A Clojure CLI tool designed to interact with ATOSS.
 **Table of Contents**
 
 - [About](#about)
-  - [Usage](#usage)
-    - [Prerequisite](#prerequisite)
-    - [Requirements](#requirements)
-    - [Installation](#installation)
-      - [Automatic](#automatic)
-      - [Manually](#manually)
-    - [Updating](#updating)
-  - [Development](#development)
-  - [Roadmap](#roadmap)
-  - [Troubleshooting](#troubleshooting)
-    - [Chromedriver does not start](#chromedriver-does-not-start)
-    - [View command fails](#view-command-fails)
-  - [License](#license)
+    - [Usage](#usage)
+        - [Requirements](#requirements)
+        - [Installation](#installation)
+            - [Automatic](#automatic)
+            - [Manually](#manually)
+        - [Configuration](#configuration)
+        - [Updating](#updating)
+    - [Development](#development)
+    - [Roadmap](#roadmap)
+    - [Troubleshooting](#troubleshooting)
+        - [Chromedriver does not start](#chromedriver-does-not-start)
+        - [View command fails](#view-command-fails)
+    - [License](#license)
 
 <!-- markdown-toc end -->
 
@@ -41,22 +41,6 @@ atoss-cli log -c wh -e "17:30"
 If you are unsure about available day codes, you can always check ATOSS manually.
 
 To view the full list of options, call `atoss-cli -h`
-
-### Prerequisite
-
-Create a text file named `.atoss` in your home directory (e.g. `~/.atoss`).
-
-The file should be written in [EDN](https://github.com/edn-format/edn) with the following contents (your ATOSS username and password):
-
-```edn
-{:username "1234567", :password "blablabla"}
-```
-
-You can also optionally specify a custom Atoss URL:
-
-```edn
-{:username "1234567", :password "blablabla", :url "https://ases.my-custom-domain.com"}
-```
 
 ### Requirements
 
@@ -79,6 +63,22 @@ Download the latest release JAR from [Release](https://github.com/platogo/atoss-
 ```bash
 java -jar atoss-cli-standalone.jar -h
 ```
+
+### Configuration
+
+```bash
+atoss-cli config init
+atoss-cli config set username <your atoss username>
+atoss-cli config set password <your atoss password>
+```
+
+Optionally, you can also set a custom Atoss URL:
+
+```bash
+atoss-cli config set url http://ases.custom.com
+```
+
+This will create a text file named `.atoss` in your home directory (e.g. `~/.atoss` on *nix).
 
 ### Updating
 

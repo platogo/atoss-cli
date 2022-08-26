@@ -26,6 +26,11 @@
   [file config]
   (spit file (with-out-str (pr config))))
 
+(defn init
+  "Initialise config by creating an empty config file."
+  ([] (write (default-config-file-path default-config-file-name) {}))
+  ([file] (write file {})))
+
 (defn set-val
   "Set a `val` for the given configuration `key` and persist it."
   ([key val]

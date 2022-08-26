@@ -49,10 +49,12 @@
          summary :summary,
          options :options,
          :as opts} (parse-opts args cli/options)
-        command (first arguments)]
+        [cmd subcmd k v] arguments]
     (cond
       (options :version) (cli/print-project-ver)
       (options :help) (cli/print-help summary)
-      (= command "log") (log-time opts)
+      (= cmd "log") (log-time opts)
+      (and (= cmd "config") (= subcmd "init")) (config/init)
+      (and (= cmd "config") (= subcmd "set")) (config/set-val (keyword k) v)
       :else (cli/print-help summary))
     (flush)))
