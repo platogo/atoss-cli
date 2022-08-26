@@ -1,8 +1,6 @@
 (ns atoss-cli.atoss
   "Functions related to interacting with ATOSS via WebDriver."
   (:require
-   [clojure.edn :as edn]
-   [clojure.java.io :as io]
    [etaoin.api :as api]
    [etaoin.keys :as keys])
   (:gen-class))
@@ -86,7 +84,7 @@
 
 (defn login
   "Login into ATOSS dashboard using provided credentials."
-  [driver {user :username pass :password} {verbosity :verbosity}]
+  [driver {user :username pass :password verbosity :verbosity}]
   (when (> verbosity 0)
     (println "Logging into ATOSS with user: " (subs user 3) "***"))
   (doto driver
@@ -187,15 +185,4 @@
                        (api/get-element-inner-html driver (-cell-selector row col)))
             day (apply ->Day col-vals)]
         day))))
-
-;; TODO: Move to separate config namespace
-(defn creds-from-dotfile
-  "Returns atoss credentials from dotfile in home directory."
-  []
-  (let [dotfile-name ".atoss"
-        home (System/getProperty "user.home")
-        dotfile-path (-> (io/file home dotfile-name) (.getPath))]
-    (try
-      (-> dotfile-path (slurp) (edn/read-string))
-      (catch Exception _e (println "Failed to read credentials, make sure .atoss file exists!")))))
 

@@ -2,7 +2,7 @@
   (:require
    [clojure.java.io :as io]
    [atoss-cli.atoss :refer [valid-day-codes]]
-   [clojure.term.colors :refer [bold]])
+   [clojure.term.colors :as c])
   (:import (java.text SimpleDateFormat)
            (java.util Date Properties))
   (:gen-class))
@@ -15,11 +15,11 @@ Work seamlessly with ATOSS time sheets.")
 
 (def help-header
   (str
-   (bold "USAGE") "
+   (c/bold "USAGE") "
   atoss-cli <command> [args]
 
 "
-   (bold "COMMANDS")
+   (c/bold "COMMANDS")
    "
   log:       Log time pair for today or a specific date"))
 

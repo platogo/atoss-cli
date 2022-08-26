@@ -52,6 +52,12 @@ The file should be written in [EDN](https://github.com/edn-format/edn) with the 
 {:username "1234567", :password "blablabla"}
 ```
 
+You can also optionally specify a custom Atoss URL:
+
+```edn
+{:username "1234567", :password "blablabla", :url "https://ases.my-custom-domain.com"}
+```
+
 ### Requirements
 
 - `Java Runtime Environment` (at least version 8), I recommend using [Jabba](https://github.com/shyiko/jabba) or Homebrew (`brew install openjdk`)

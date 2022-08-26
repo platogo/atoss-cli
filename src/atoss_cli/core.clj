@@ -4,6 +4,7 @@
    [clojure.tools.cli :refer [parse-opts]]
    [clojure.term.colors :refer [bold green red]]
    [atoss-cli.atoss :as atoss]
+   [atoss-cli.config :as config]
    [atoss-cli.cli :as cli])
   (:import (java.util Collection))
   (:gen-class))
@@ -12,15 +13,16 @@
   "Log a time pair for a given date."
   [{opts :options}]
   (let [driver (atoss/setup-driver)
-        creds (atoss/creds-from-dotfile)
-        {date :date} opts]
+        config (config/load-in)
+        {date :date} opts
+        session-opts (merge opts config)]
     (try
       (doto driver
-        (atoss/login creds opts)
+        (atoss/login session-opts)
         (atoss/nav-to-time-correction)
         (atoss/set-date date)
-        (atoss/create-time-pair-entry opts)
-        (atoss/logout opts)
+        (atoss/create-time-pair-entry session-opts)
+        (atoss/logout session-opts)
         (atoss/end))
       (println (green "Logged time for date: " date))
       (catch Exception e (println (red (.getMessage e)))))))
@@ -30,9 +32,9 @@
   "Display the current month overview in the terminal."
   [{opts :options}]
   (let [driver (atoss/setup-driver)
-        creds (atoss/creds-from-dotfile)]
+        config (config/load-in)]
     (doto driver
-      (atoss/login creds opts)
+      (atoss/login (merge opts config))
       (atoss/nav-to-month-overview))
     (let [days (atoss/parse-month-table-rows driver)]
       (println (bold "Month overview:"))
