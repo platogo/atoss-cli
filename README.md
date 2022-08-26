@@ -4,23 +4,25 @@
 
 A Clojure CLI tool designed to interact with ATOSS. 
 
+[![asciicast](https://asciinema.org/a/517368.svg)](https://asciinema.org/a/517368)
+
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
 
 - [About](#about)
-    - [Usage](#usage)
-        - [Requirements](#requirements)
-        - [Installation](#installation)
-            - [Automatic](#automatic)
-            - [Manually](#manually)
-        - [Configuration](#configuration)
-        - [Updating](#updating)
-    - [Development](#development)
-    - [Roadmap](#roadmap)
-    - [Troubleshooting](#troubleshooting)
-        - [Chromedriver does not start](#chromedriver-does-not-start)
-        - [View command fails](#view-command-fails)
-    - [License](#license)
+  - [Usage](#usage)
+    - [Requirements](#requirements)
+    - [Installation](#installation)
+      - [Automatic](#automatic)
+      - [Manually](#manually)
+    - [Configuration](#configuration)
+    - [Updating](#updating)
+  - [Development](#development)
+  - [Roadmap](#roadmap)
+  - [Troubleshooting](#troubleshooting)
+    - [Chromedriver does not start](#chromedriver-does-not-start)
+    - [View command fails](#view-command-fails)
+  - [License](#license)
 
 <!-- markdown-toc end -->
 
