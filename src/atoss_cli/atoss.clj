@@ -9,8 +9,6 @@
 
 (def valid-day-codes #{"du" "nu" "rt" "sd" "ta" "th" "tp" "ts" "wh" "" nil})
 
-(def atoss-url "https://ases.novomatic.com/SES/html")
-
 (def login-btn {:css ".btn-login"})
 (def nav-menu-btn {:css "#nav_menu"})
 (def nav-user-btn {:css "#nav_user"})
@@ -83,8 +81,9 @@
      driver)))
 
 (defn login
-  "Login into ATOSS dashboard using provided credentials."
-  [driver {user :username pass :password verbosity :verbosity}]
+  "Login into ATOSS dashboard."
+  [driver {user :username pass :password
+           verbosity :verbosity atoss-url :url}]
   (when (> verbosity 0)
     (println "Logging into ATOSS with user: " (subs user 3) "***"))
   (doto driver
