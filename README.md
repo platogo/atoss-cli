@@ -4,7 +4,7 @@
 
 A Clojure CLI tool designed to interact with ATOSS. 
 
-[![asciicast](https://asciinema.org/a/517368.svg)](https://asciinema.org/a/517368)
+[![asciicast](https://asciinema.org/a/517960.svg)](https://asciinema.org/a/517960)
 
 <!-- markdown-toc start - Don't edit this section. Run M-x markdown-toc-refresh-toc -->
 **Table of Contents**
