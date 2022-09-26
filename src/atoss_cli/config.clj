@@ -5,6 +5,7 @@
    [clojure.java.io :as io]))
 
 (def default-config-file-name ".atoss")
+(def default-url "https://ases.novomatic.com/SES/html")
 
 (defn default-config-file-path [file-name]
   (-> (io/file (System/getProperty "user.home") file-name) (.getPath)))
@@ -15,8 +16,7 @@
    (load-in (default-config-file-path default-config-file-name)))
   ([file]
    (try
-     (let [default-url "https://ases.novomatic.com/SES/html"
-           parsed-config (-> file (slurp) (edn/read-string))]
+     (let [parsed-config (-> file (slurp) (edn/read-string))]
        (merge {:url default-url} parsed-config))
 
      (catch Exception _e (printf "Failed to load config, make sure %s file exists!\n" file)))))

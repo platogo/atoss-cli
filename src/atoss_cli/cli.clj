@@ -22,6 +22,7 @@ Work seamlessly with ATOSS time sheets.")
    (c/bold "COMMANDS")
    "
   log:                     Log time pair for today or a specific date
+  web:                     Open Atoss web interface in default browser
   config init:             Initialize the configuration
   config set <key> <val>:  Set a custom configuration value
 "))

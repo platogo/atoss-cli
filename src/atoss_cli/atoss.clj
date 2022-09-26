@@ -1,6 +1,7 @@
 (ns atoss-cli.atoss
   "Functions related to interacting with ATOSS via WebDriver."
   (:require
+   [clojure.java.browse :refer [browse-url]]
    [etaoin.api :as api]
    [etaoin.keys :as keys])
   (:gen-class))
@@ -79,6 +80,12 @@
    (let [driver (api/chrome {:headless headless?})]
      (api/set-window-size driver 1200 800)
      driver)))
+
+(defn browse
+  "Open Atoss in the default web browser."
+  [{atoss-url :url}]
+  (println "Opening Atoss in browser...")
+  (browse-url atoss-url))
 
 (defn login
   "Login into ATOSS dashboard."

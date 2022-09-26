@@ -36,6 +36,12 @@
                              (red)
                              (println))))))
 
+(defn web
+  "Open in web browser."
+  []
+  (let [config (config/load-in)]
+    (atoss/browse config)))
+
 ;; FIXME: very brittle so disabled for now
 (defn show-month-overview
   "Display the current month overview in the terminal."
@@ -63,6 +69,7 @@
       (options :version) (cli/print-project-ver)
       (options :help) (cli/print-help summary)
       (= cmd "log") (log-time opts)
+      (= cmd "web") (web)
       (and (= cmd "config") (= subcmd "init")) (config/init)
       (and (= cmd "config") (= subcmd "set")) (config/set-val (keyword k) v)
       :else (cli/print-help summary))
