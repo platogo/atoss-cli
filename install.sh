@@ -2,8 +2,10 @@
 set -euo pipefail
 
 PWD=$(pwd)
-LOCAL_JAR_FILE=$PWD/target/default+uberjar/atoss-cli-standalone.jar
 INSTALL_DIR=/usr/local/bin
+LOCAL_JAR_PATH=$PWD/target/default+uberjar
+LOCAL_JAR_NAME=atoss-cli-standalone.jar
+LOCAL_JAR_FILE=$LOCAL_JAR_PATH/$LOCAL_JAR_NAME
 
 # Make a check that chromedriver and java are present
 echo 'Checking requirements...'
@@ -23,8 +25,9 @@ if [ -f "$LOCAL_JAR_FILE" ]; then
 	install "$LOCAL_JAR_FILE" "$INSTALL_DIR"
 else
 	echo "$LOCAL_JAR_FILE does not exist, pulling latest release from Github."
-	curl -L https://github.com/platogo/atoss-cli/releases/latest/download/atoss-cli-standalone.jar >atoss-cli-standalone.jar
-	install atoss-cli-standalone.jar $INSTALL_DIR
+	mkdir -p $LOCAL_JAR_PATH
+	curl -L https://github.com/platogo/atoss-cli/releases/latest/download/atoss-cli-standalone.jar > $LOCAL_JAR_FILE
+	install $LOCAL_JAR_FILE $INSTALL_DIR
 fi
 
 echo "Installing wrapper..."
