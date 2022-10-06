@@ -2,10 +2,13 @@
 set -euo pipefail
 
 PWD=$(pwd)
-INSTALL_DIR=/usr/local/bin
 LOCAL_JAR_PATH=$PWD/target/default+uberjar
 LOCAL_JAR_NAME=atoss-cli-standalone.jar
 LOCAL_JAR_FILE=$LOCAL_JAR_PATH/$LOCAL_JAR_NAME
+
+if [ -z ${INSTALL_DIR+x} ]; then
+  INSTALL_DIR=/usr/local/bin
+fi
 
 # Make a check that chromedriver and java are present
 echo 'Checking requirements...'
@@ -32,6 +35,7 @@ fi
 
 echo "Installing wrapper..."
 
-cp -f "$PWD/wrapper.sh" "${INSTALL_DIR}/atoss-cli"
+sed "s|INSTALL_DIR=.*|INSTALL_DIR=$INSTALL_DIR|" "$PWD/wrapper.sh" > "${INSTALL_DIR}/atoss-cli"
+chmod 755 "$INSTALL_DIR/atoss-cli"
 
 echo "Done! You can try running atoss-cli --version"
