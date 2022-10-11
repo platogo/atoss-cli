@@ -28,9 +28,9 @@ if [ -f "$LOCAL_JAR_FILE" ]; then
 	install "$LOCAL_JAR_FILE" "$INSTALL_DIR"
 else
 	echo "$LOCAL_JAR_FILE does not exist, pulling latest release from Github."
-	mkdir -p $LOCAL_JAR_PATH
-	curl -L https://github.com/platogo/atoss-cli/releases/latest/download/atoss-cli-standalone.jar > $LOCAL_JAR_FILE
-	install $LOCAL_JAR_FILE $INSTALL_DIR
+	mkdir -p "$LOCAL_JAR_PATH"
+	curl -L https://github.com/platogo/atoss-cli/releases/latest/download/atoss-cli-standalone.jar > "$LOCAL_JAR_FILE"
+	install "$LOCAL_JAR_FILE" $INSTALL_DIR
 fi
 
 echo "Installing wrapper..."
