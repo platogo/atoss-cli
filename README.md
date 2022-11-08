@@ -13,6 +13,7 @@ A Clojure CLI tool designed to interact with ATOSS.
   - [Usage](#usage)
     - [Requirements](#requirements)
     - [Installation](#installation)
+      - [Homebrew](#homebrew)
       - [Automatic](#automatic)
       - [Manually](#manually)
     - [Configuration](#configuration)
@@ -53,6 +54,10 @@ To view the full list of options, call `atoss-cli -h`
 If you are on macOS, this is as easy as `brew install chromedriver openjdk`
 
 ### Installation
+
+#### Homebrew
+
+Simply run `brew install platogo/tap/atoss-cli`
 
 #### Automatic
 
