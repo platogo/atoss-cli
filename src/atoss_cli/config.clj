@@ -5,7 +5,7 @@
    [clojure.java.io :as io]))
 
 (def default-config-file-name ".atoss")
-(def default-url "https://ases.novomatic.com/SES/html")
+(def default-url "https://atoss.greentube.com/SES/html")
 
 (defn default-config-file-path [file-name]
   (-> (io/file (System/getProperty "user.home") file-name) (.getPath)))

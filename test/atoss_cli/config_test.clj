@@ -13,7 +13,7 @@
 
 (deftest load-in-test
   (setup)
-  (is (= {:url "https://ases.novomatic.com/SES/html", :username 123456}
+  (is (= {:url "https://atoss.greentube.com/SES/html", :username 123456}
          (subject/load-in "test.edn")))
   (teardown))
 
