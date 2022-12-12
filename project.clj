@@ -1,4 +1,4 @@
-(defproject atoss-cli "0.3.4-SNAPSHOT"
+(defproject atoss-cli "0.3.5-SNAPSHOT"
   :description "A CLI tool for interacting with ATOSS time sheets"
   :url "https://github.com/platogo/atoss-cli"
   :license {:name "EPL-2.0 OR GPL-2.0-or-later WITH Classpath-exception-2.0"
