@@ -31,10 +31,12 @@
         (green "Logged time for date: " date))
        (shutdown-agents))
 
-      (catch Exception e (-> e
+      (catch Exception e 
+        (-> e
                              (.getMessage)
                              (red)
-                             (println))))))
+                             (println))
+        (atoss/end driver)))))
 
 (defn web
   "Open in web browser."
