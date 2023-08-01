@@ -10,10 +10,21 @@
   (:import (java.util Collection))
   (:gen-class))
 
+
+(def mac-chrome-path "/Applications/Google Chrome.app/Contents/MacOS/Google Chrome")
+
+(defn -maybe-inject-mac-chrome-path
+  "Inject the path to the Chrome binary on macOS if the current OS is macOS."
+  [opts]
+  (let [os-name (System/getProperty "os.name")]
+    (if (re-find #"Mac OS X" os-name)
+      (assoc opts :path-browser mac-chrome-path)
+      opts)))
+
 (defn log-time
   "Log a time pair for a given date."
   [{opts :options}]
-  (let [driver (atoss/setup-driver)
+  (let [driver (atoss/setup-driver (-maybe-inject-mac-chrome-path {:headless true}))
         config (config/load-in)
         {date :date} opts
         session-opts (merge opts config)]
@@ -31,10 +42,12 @@
         (green "Logged time for date: " date))
        (shutdown-agents))
 
-      (catch Exception e (-> e
-                             (.getMessage)
-                             (red)
-                             (println))))))
+      (catch Exception e
+        (-> e
+            (.getMessage)
+            (red)
+            (println))
+        (atoss/end driver)))))
 
 (defn web
   "Open in web browser."

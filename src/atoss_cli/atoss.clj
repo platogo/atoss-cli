@@ -20,6 +20,9 @@
 
 (def update-btn {:css ".z-toolbarbutton:nth-of-type(1)"})
 (def date-input {:css ".z-datebox-input"})
+(def timepair-table {:css "div.slick-pane.slick-pane-top.slick-pane-left > div.slick-viewport.slick-viewport-top.slick-viewport-left"})
+(def time-pair-row {:css "div.slick-row"})
+(def add-time-pair-btn {:css "ul.z-menupopup-content > li.z-menuitem > a.z-menuitem-content:first-of-type"})
 
 (defprotocol TimeSheetDay
   (fmt-row [day]))
@@ -75,9 +78,9 @@
 
 (defn setup-driver
   "Create a default driver instance to be used for interacting with ATOSS. Headless by default."
-  ([] (setup-driver true))
-  ([headless?]
-   (let [driver (api/chrome {:headless headless?})]
+  ([] (setup-driver {:headless true}))
+  ([opts]
+   (let [driver (api/chrome opts)]
      (api/set-window-size driver 1200 800)
      driver)))
 
