@@ -41,6 +41,26 @@ You can also specify a day code (e.g. `wh` for a Work From Home (WFH) day):
 atoss-cli log -c wh -e "17:30"
 ```
 
+If you have a CSV file with your time entries, you can pass that as input too:
+
+```bash
+atoss-cli log -f stunden.csv
+```
+
+The file must be in the following format:
+
+```csv
+date,start,end,code
+```
+
+For example:
+
+```csv
+25.10.2023,10:00,18:45,wh
+```
+
+The code can be optional, just make sure you have the correct number of columns.
+
 If you are unsure about available day codes, you can always check ATOSS manually.
 
 To view the full list of options, call `atoss-cli -h`

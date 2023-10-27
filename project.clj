@@ -7,6 +7,7 @@
   :min-lein-version "2.0.0"
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/tools.cli "1.0.206"]
+                 [org.clojure/data.csv "1.0.1"]
                  [etaoin "0.4.6"]
                  [com.github.pmonks/spinner "2.0.190"]
                  [clojure-term-colors "0.1.0"]
