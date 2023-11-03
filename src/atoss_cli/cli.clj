@@ -54,6 +54,7 @@ Work seamlessly with ATOSS time sheets.")
     :default "9:00"]
    ["-e" "--end-time TIME" "Work end time in the format HH:MM"
     :default "17:00"]
+   ["-f" "--file FILE" "Log times based on an input file."]
    ;; A non-idempotent option (:default is applied first)
    ["-v" nil "Verbosity level"
     :id :verbosity
