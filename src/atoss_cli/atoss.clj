@@ -108,7 +108,8 @@
     (api/fill-active date)
     (api/fill-active keys/enter)
     (api/wait 2)
-    (api/click date-input)))
+    (api/click date-input)
+    (api/wait 1)))
 
 (defn create-time-pair-entry
   "Create a new time entry as a combination of day code and a time pair for a given day."
