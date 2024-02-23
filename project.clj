@@ -8,10 +8,9 @@
   :dependencies [[org.clojure/clojure "1.11.1"]
                  [org.clojure/tools.cli "1.0.206"]
                  [org.clojure/data.csv "1.0.1"]
-                 [etaoin "0.4.6"]
+                 [etaoin "1.0.40"]
                  [com.github.pmonks/spinner "2.0.190"]
-                 [clojure-term-colors "0.1.0"]
-                 [com.github.clj-easy/graal-build-time "0.1.4"]]
+                 [clojure-term-colors "0.1.0"]]
   :target-path "target/%s"
   :jar-name "atoss-cli.jar"
   :uberjar-name "atoss-cli-standalone.jar"
