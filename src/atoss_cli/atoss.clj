@@ -133,9 +133,8 @@
     (api/fill-active keys/enter)
     (api/wait 2)))
 
-(defn create-time-pair-entries
-  "Create time pair entries from a collection of time pairs."
-  [driver time-pairs]
-  (doseq [time-pair time-pairs]
-    (println "Creating time pair entry for date: " (:date time-pair))
-    (create-time-pair-entry driver time-pair)))
+(defn -get-date
+  "Get the currently set date in the ZK view"
+  [driver]
+  (-> driver
+      (api/get-element-value date-input)))
