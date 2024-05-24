@@ -21,7 +21,6 @@ A Clojure CLI tool designed to interact with ATOSS.
   - [Development](#development)
   - [Roadmap](#roadmap)
   - [Troubleshooting](#troubleshooting)
-    - [Chromedriver does not start](#chromedriver-does-not-start)
     - [View command fails](#view-command-fails)
   - [License](#license)
 
@@ -124,14 +123,6 @@ Check out [DEVELOPMENT.md](./DEVELOPMENT.md)
   - [x] Windows support
   
 ## Troubleshooting
-
-### Chromedriver does not start
-
-This is a fairly common issue due to the security model of macOS. It is likely that after an update of `chromedriver`, it needs to be explicitly granted permissions again.
-
-After it tries to launch, make sure to press `Allow` in `System Preferences > Security & Privacy`
-
-![security](./security.png)
 
 ### View command fails
 
