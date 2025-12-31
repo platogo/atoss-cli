@@ -12,8 +12,15 @@ type ExtensionMessage =
   | { type: 'dataResponse'; success: boolean; data?: TimeEntry; error?: string; }
   | { type: 'error'; message: string; };
 
+interface TimeEntry {
+  start: string;
+  end: string;
+  type: string;
+}
+
 type HostMessage =
-  | { type: 'getData'; date: string; };
+  | { type: 'getData'; date: string; }
+  | { type: 'setData'; date: string; entries: TimeEntry[]; };
 
 const NATIVE_HOST_NAME = 'com.atoss.cli';
 
@@ -133,6 +140,48 @@ async function handleDaemonMessage(message: HostMessage) {
       }
     } catch (error) {
       console.error('Error handling getData:', error);
+      sendToDaemon({
+        type: 'dataResponse',
+        success: false,
+        error: error instanceof Error ? error.message : 'Unknown error'
+      });
+    }
+  } else if (message.type === 'setData') {
+    // Forward to content script
+    try {
+      // Get or create ATOSS tab (automatically opens if needed)
+      const tab = await getOrCreateAtossTab();
+
+      if (!tab.id) {
+        sendToDaemon({
+          type: 'dataResponse',
+          success: false,
+          error: 'Failed to get ATOSS tab ID'
+        });
+        return;
+      }
+
+      const response = await chrome.tabs.sendMessage(tab.id, {
+        action: 'setData',
+        date: message.date,
+        entries: message.entries
+      });
+
+      if (response.success) {
+        sendToDaemon({
+          type: 'dataResponse',
+          success: true,
+          data: response.data
+        });
+      } else {
+        sendToDaemon({
+          type: 'dataResponse',
+          success: false,
+          error: response.error || 'Unknown error'
+        });
+      }
+    } catch (error) {
+      console.error('Error handling setData:', error);
       sendToDaemon({
         type: 'dataResponse',
         success: false,

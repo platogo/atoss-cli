@@ -32,9 +32,15 @@ export interface ErrorMessage {
 }
 
 // Messages from Daemon to Extension
-export type HostMessage = GetDataRequest;
+export type HostMessage = GetDataRequest | SetDataRequest;
 
 export interface GetDataRequest {
   type: 'getData';
   date: string;
+}
+
+export interface SetDataRequest {
+  type: 'setData';
+  date: string;
+  entries: TimeEntry[];
 }

@@ -55,6 +55,26 @@ npm start get -- -d 2024-12-24
 npm start get -- --date 2024-12-24
 ```
 
+### Set Time Tracking Data
+
+```bash
+# Set entries for a specific date (type defaults to "Presence")
+npm start set -- -d 2024-12-31 -e 8:45,12:00 -e 12:30,17:30
+
+# Set entries with explicit type
+npm start set -- -d 2024-12-31 -e 8:45,12:00,wh -e 12:30,17:30,wh
+
+# Set entries for today
+npm start set -- -e 9:00,17:00
+```
+
+Each `-e` flag specifies one time entry with format: `start,end[,type]`
+- `start`: Start time (HH:MM or H:MM, e.g., 8:45)
+- `end`: End time (HH:MM or H:MM, e.g., 17:30)
+- `type`: Entry type (optional, defaults to "Presence". e.g., "wh" for work hours)
+
+**Safety**: The `set` command will fail if any entries already exist for the specified date, preventing accidental overwrites.
+
 **Important**: When passing flags, use `--` before the flag:
 - `npm start get -- -d 2024-12-24` ✓ Correct
 - `npm start get -d 2024-12-24` ✗ Incorrect (npm consumes the flag)
@@ -62,7 +82,7 @@ npm start get -- --date 2024-12-24
 The extension automatically:
 1. Uses your browser's existing authenticated session
 2. Opens an ATOSS tab in the background if not already open
-3. Extracts the requested data
+3. Extracts or sets the requested data
 4. Returns results instantly to the CLI
 
 You don't need to open ATOSS manually or click anything in the browser!
@@ -83,6 +103,7 @@ This is a monorepo using NPM workspaces with three packages:
 | `setup-extension` | Build and setup browser extension |
 | `install-host <id>` | Install native messaging daemon for extension |
 | `get [--date <date>]` | Get time tracking data for a specific date (YYYY-MM-DD) |
+| `set --date <date> -e <start,end[,type]>` | Set time tracking entries for a specific date (type defaults to "Presence") |
 
 ### Build Commands
 ```bash

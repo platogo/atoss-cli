@@ -154,6 +154,12 @@ function createSocketServer(): net.Server {
               type: 'getData',
               date: request.date
             });
+          } else if (request.type === 'setData') {
+            sendExtensionMessage({
+              type: 'setData',
+              date: request.date,
+              entries: request.entries
+            });
           }
         } catch (error) {
           log(`Error parsing CLI request: ${error}`);
