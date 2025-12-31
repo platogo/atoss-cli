@@ -1,0 +1,28 @@
+{
+  "name": "@atoss/cli",
+  "version": "1.0.0",
+  "description": "CLI tool for ATOSS Staff Center time tracking",
+  "main": "dist/index.js",
+  "bin": {
+    "atoss-cli": "./dist/index.js",
+    "atoss-cli-daemon": "./dist/native-host/daemon.js"
+  },
+  "scripts": {
+    "build": "tsc && npm run copy-files && npm run create-launcher",
+    "copy-files": "mkdir -p dist/native-host && cp src/native-host/manifest-template.json dist/native-host/",
+    "create-launcher": "echo '#!/bin/bash\\nexec /opt/homebrew/bin/node \"$(dirname \"$0\")/daemon.js\" \"$@\"' > dist/native-host/daemon-launcher.sh && chmod +x dist/native-host/daemon-launcher.sh",
+    "dev": "tsc --watch",
+    "start": "node dist/index.js"
+  },
+  "keywords": ["atoss", "time-tracking", "cli"],
+  "author": "",
+  "license": "MIT",
+  "dependencies": {
+    "commander": "^11.1.0",
+    "@atoss/shared": "*"
+  },
+  "devDependencies": {
+    "@types/node": "^20.10.5",
+    "typescript": "^5.3.3"
+  }
+}

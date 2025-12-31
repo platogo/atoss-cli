@@ -1,0 +1,24 @@
+{
+  "name": "atoss-cli-monorepo",
+  "version": "1.0.0",
+  "description": "Monorepo for ATOSS CLI and browser extension",
+  "private": true,
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "npm run build --workspaces",
+    "build:cli": "npm run build --workspace=@atoss/cli",
+    "build:extension": "npm run build --workspace=@atoss/extension",
+    "build:shared": "npm run build --workspace=@atoss/shared",
+    "clean": "npm run clean --workspaces --if-present",
+    "start": "npm start --workspace=@atoss/cli",
+    "cli": "node packages/cli/dist/index.js"
+  },
+  "keywords": ["atoss", "time-tracking", "cli"],
+  "author": "",
+  "license": "MIT",
+  "devDependencies": {
+    "typescript": "^5.3.3"
+  }
+}

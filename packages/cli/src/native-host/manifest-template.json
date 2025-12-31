@@ -1,0 +1,9 @@
+{
+  "name": "com.atoss.cli",
+  "description": "ATOSS CLI Native Messaging Host",
+  "path": "{{EXECUTABLE_PATH}}",
+  "type": "stdio",
+  "allowed_origins": [
+    "{{EXTENSION_ID}}"
+  ]
+}

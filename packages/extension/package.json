@@ -1,0 +1,19 @@
+{
+  "name": "@atoss/extension",
+  "version": "1.0.0",
+  "description": "Browser extension for ATOSS CLI",
+  "scripts": {
+    "build": "tsc && npm run fix-modules && npm run copy-files",
+    "fix-modules": "sed -i '' '/^export {};$/d; /Object.defineProperty(exports/d' dist/content.js dist/background.js || true",
+    "copy-files": "cp -r public/* dist/",
+    "watch": "tsc --watch",
+    "clean": "rm -rf dist"
+  },
+  "dependencies": {
+    "@atoss/shared": "*"
+  },
+  "devDependencies": {
+    "@types/chrome": "^0.0.254",
+    "typescript": "^5.3.3"
+  }
+}
