@@ -618,14 +618,16 @@ async function fillTimeEntry(entry: TimeEntry, doc: Document): Promise<void> {
     throw new Error('Type input not found');
   }
 
-  // Click the input to open suggestions
-  console.log('Clicking type input to open suggestions...');
-  typeInput.click();
+  // Focus the input
   typeInput.focus();
 
-  // Wait for suggestions to appear
-  console.log('Waiting for suggestions to appear...');
-  await new Promise(resolve => setTimeout(resolve, 500));
+  // Type the value using ZK widget to trigger proper search/filtering
+  console.log(`Typing type value via ZK widget: ${typeValue}`);
+  await setTypeInputValue(typeInput, typeValue, doc);
+
+  // Wait for search results/suggestions to update
+  console.log('Waiting for search results to update...');
+  await new Promise(resolve => setTimeout(resolve, 800));
 
   // Get widget base ID by removing '-real' suffix from input ID
   const inputId = typeInput.id.replace(/-real$/, '');
@@ -647,10 +649,28 @@ async function fillTimeEntry(entry: TimeEntry, doc: Document): Promise<void> {
         console.log(`  Item ${idx}: "${item.textContent?.trim()}"`);
       });
 
-      // Find item that contains the type value
+      // Find item that matches the type value
+      // Look for exact match first, then substring match
       selectedItem = items.find(item => {
-        const text = item.textContent?.toLowerCase() || '';
-        return text.includes(typeValue.toLowerCase());
+        const textContent = item.textContent || '';
+        const firstRowCol = item.querySelector('.rowCol:first-child')?.textContent?.trim() || '';
+        const lowerTypeValue = typeValue.toLowerCase();
+
+        console.log(`  Checking item: firstRowCol="${firstRowCol}", fullText="${textContent.trim()}"`);
+
+        // Exact match on first column (the code/name)
+        if (firstRowCol.toLowerCase() === lowerTypeValue) {
+          console.log(`  -> Exact match!`);
+          return true;
+        }
+
+        // Substring match as fallback
+        if (textContent.toLowerCase().includes(lowerTypeValue)) {
+          console.log(`  -> Substring match!`);
+          return true;
+        }
+
+        return false;
       }) || null;
     }
   }
@@ -671,10 +691,28 @@ async function fillTimeEntry(entry: TimeEntry, doc: Document): Promise<void> {
           console.log(`  Item ${idx}: "${item.textContent?.trim()}"`);
         });
 
-        // Find item that contains the type value
+        // Find item that matches the type value
+        // Look for exact match first, then substring match
         selectedItem = items.find(item => {
-          const text = item.textContent?.toLowerCase() || '';
-          return text.includes(typeValue.toLowerCase());
+          const textContent = item.textContent || '';
+          const firstRowCol = item.querySelector('.rowCol:first-child')?.textContent?.trim() || '';
+          const lowerTypeValue = typeValue.toLowerCase();
+
+          console.log(`  Checking item: firstRowCol="${firstRowCol}", fullText="${textContent.trim()}"`);
+
+          // Exact match on first column (the code/name)
+          if (firstRowCol.toLowerCase() === lowerTypeValue) {
+            console.log(`  -> Exact match!`);
+            return true;
+          }
+
+          // Substring match as fallback
+          if (textContent.toLowerCase().includes(lowerTypeValue)) {
+            console.log(`  -> Substring match!`);
+            return true;
+          }
+
+          return false;
         }) || null;
       }
     }
