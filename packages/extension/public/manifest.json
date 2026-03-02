@@ -5,7 +5,8 @@
   "version": "1.0.0",
   "permissions": [
     "cookies",
-    "nativeMessaging"
+    "nativeMessaging",
+    "scripting"
   ],
   "host_permissions": [
     "https://greentube.atoss.com/*",
@@ -19,12 +20,6 @@
     {
       "matches": ["https://greentube.atoss.com/*"],
       "js": ["content.js"]
-    }
-  ],
-  "web_accessible_resources": [
-    {
-      "resources": ["inject.js"],
-      "matches": ["https://greentube.atoss.com/*"]
     }
   ],
   "icons": {

@@ -103,12 +103,34 @@ function waitForTabLoad(tabId: number): Promise<void> {
   });
 }
 
+// Ensure content script is injected in the tab, injecting programmatically if needed
+async function ensureContentScript(tabId: number): Promise<void> {
+  try {
+    // Try a ping to check if content script is already loaded
+    await chrome.tabs.sendMessage(tabId, { action: 'ping' });
+  } catch {
+    // Content script not loaded — inject it programmatically
+    console.log('Content script not loaded, injecting programmatically...');
+    await chrome.scripting.executeScript({
+      target: { tabId },
+      files: ['content.js']
+    });
+    // Wait a moment for the script to initialize
+    await new Promise(resolve => setTimeout(resolve, 500));
+  }
+}
+
+// Send a message to the content script, ensuring it's loaded first
+async function sendToContentScript(tabId: number, message: any): Promise<any> {
+  await ensureContentScript(tabId);
+  return chrome.tabs.sendMessage(tabId, message);
+}
+
 // Handle messages from daemon
 async function handleDaemonMessage(message: HostMessage) {
   if (message.type === 'getData') {
     // Forward to content script
     try {
-      // Get or create ATOSS tab (automatically opens if needed)
       const tab = await getOrCreateAtossTab();
 
       if (!tab.id) {
@@ -120,7 +142,7 @@ async function handleDaemonMessage(message: HostMessage) {
         return;
       }
 
-      const response = await chrome.tabs.sendMessage(tab.id, {
+      const response = await sendToContentScript(tab.id, {
         action: 'extractData',
         date: message.date
       });
@@ -149,7 +171,6 @@ async function handleDaemonMessage(message: HostMessage) {
   } else if (message.type === 'setData') {
     // Forward to content script
     try {
-      // Get or create ATOSS tab (automatically opens if needed)
       const tab = await getOrCreateAtossTab();
 
       if (!tab.id) {
@@ -161,7 +182,7 @@ async function handleDaemonMessage(message: HostMessage) {
         return;
       }
 
-      const response = await chrome.tabs.sendMessage(tab.id, {
+      const response = await sendToContentScript(tab.id, {
         action: 'setData',
         date: message.date,
         entries: message.entries

@@ -32,8 +32,7 @@ Command-line interface tool for ATOSS Staff Center time tracking system at `http
 **3. Browser Extension** (`packages/extension/`)
 - Chrome Extension Manifest V3
 - **Background Service Worker**: Connects to daemon, manages tabs automatically
-- **Content Script**: Automates ATOSS page (clicks, navigation, data extraction)
-- **Injected Script**: Runs in page context to access ZK framework (window.zk)
+- **Content Script**: Automates ATOSS Vue.js page (clicks, navigation, data extraction via native DOM events)
 
 ## Communication Flow
 
@@ -70,7 +69,7 @@ Content script opens modal, navigates datepicker
        ↓
 Content script verifies no existing entries (safety check)
        ↓
-For each entry: Click Add, fill form via ZK widgets, click Confirm
+For each entry: Click Add, fill form via native DOM events, click Confirm
        ↓
 Extension → Daemon → CLI via socket
        ↓
@@ -98,7 +97,7 @@ CLI displays success confirmation
 - Each `-e` flag specifies one entry: `start,end[,type]` (e.g., `8:45,12:00` or `8:45,12:00,wh`)
 - Type parameter is optional and defaults to "Presence"
 - Safety validation: Fails if any entries already exist for the date
-- Automates form filling via ZK widget API (time inputs, type selector)
+- Automates form filling via native DOM events (time inputs, type selector)
 - Supports multiple entries in a single command
 - Examples:
   - `npm start set -- -d 2024-12-31 -e 8:45,12:00 -e 12:30,17:30`
@@ -109,35 +108,64 @@ CLI displays success confirmation
 - `npm start install-host <ID>` - Installs native messaging manifest for extension ID
 - Supports multiple browsers: Arc, Chrome, Edge, Chromium
 
-### 4. ZK Framework Integration
-ATOSS uses ZK framework (https://www.zkoss.org/) for UI components. Content scripts cannot access `window.zk` due to isolation.
+### 4. Vue.js UI Automation
+ATOSS upgraded from ZK framework to Vue.js frontend. The backend still uses ZK for server communication (zkcomet requests), but `window.zk` is no longer available on the page. All automation uses native DOM events.
 
-**Solution**: Inject script into page context
-- `packages/extension/public/inject.js` runs in page context
-- Has access to `window.zk` global object
-- Communicates with content script via custom DOM events
-- Navigates datepicker: `widget.setValue(dateObj)` + `widget.fire('onChange')`
+**Key Points:**
+- The outer page still wraps content in `<iframe id="applicationIframe">`
+- Content script interacts directly with Vue.js-rendered `<input>` elements
+- No inject.js needed — values are set via `input.value` + `input`/`change` events
+- Date format for datepicker: `YYYY-MM-DD`
 
-**Example**:
+**Background tab compatibility:**
+- Native `input.focus()` / `input.blur()` are silently ignored when the tab doesn't have window focus
+- Use synthetic event dispatches instead: `simulateFocus()` dispatches mousedown/focusin/focus/mouseup/click, `simulateBlur()` dispatches focusout/blur
+- Time picker values require Enter key dispatch after setting value to commit
+- Background script (`background.ts`) uses `chrome.scripting.executeScript()` to inject content script programmatically if it's not already loaded (handles extension reload case)
+
+**Example (setting input values):**
 ```javascript
-// Parse YYYY-MM-DD to Date object
-const parts = dateString.split('-');
-const dateObj = new Date(
-  parseInt(parts[0], 10),      // year
-  parseInt(parts[1], 10) - 1,  // month (0-indexed)
-  parseInt(parts[2], 10)       // day
-);
-
-// Update ZK widget
-const widget = window.zk.Widget.$(datepickerInput);
-widget.setValue(dateObj);
-widget.fire('onChange', { value: dateObj });  // Triggers data load
+// simulateFocus (works in background tabs, unlike input.focus())
+input.dispatchEvent(new MouseEvent('mousedown', { bubbles: true }));
+input.dispatchEvent(new FocusEvent('focusin', { bubbles: true }));
+input.dispatchEvent(new FocusEvent('focus', { bubbles: false }));
+input.dispatchEvent(new MouseEvent('mouseup', { bubbles: true }));
+input.dispatchEvent(new MouseEvent('click', { bubbles: true }));
+// set value
+input.value = newValue;
+input.dispatchEvent(new Event('input', { bubbles: true }));
+input.dispatchEvent(new Event('change', { bubbles: true }));
+// commit with Enter + blur
+input.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', code: 'Enter', keyCode: 13, bubbles: true }));
+input.dispatchEvent(new FocusEvent('focusout', { bubbles: true }));
+input.dispatchEvent(new FocusEvent('blur', { bubbles: false }));
 ```
 
 ### 5. Data Extraction and Form Filling
 
+**CSS Selectors (Vue.js UI):**
+
+| Element | Selector |
+|---------|----------|
+| Edit time entry link | `div.frame-block-link` + `.frame-block-link-text` |
+| Modal | `.modal-view.active` |
+| Date picker input | `.date-picker input.input-real` |
+| Timeline container | `.one-day-timebar .timeline` |
+| Time points | `.time-point-wrapper input.time-picker__input` |
+| Interval types | `.time-interval-wrapper .output-label` |
+| Add button | `button[data-test="ws-table-features-band-add-entry-button"]` |
+| Flyout | `.flyout` |
+| Flyout time inputs | `.time-picker` + `.time-picker__prefix` (From/To), input: `.time-picker__input` |
+| Flyout type input | `.search-select input.input-real` |
+| Type search results | `.popup__content.open .table-search-select__content__item` (at document level) |
+| Cancel button | `.modal-view-footer button.btn-secondary .btn-text` |
+| Confirm button (modal) | `.modal-view-footer button.btn-dialog .btn-text` |
+| Confirm button (flyout) | `.submits-band button.btn-dialog .btn-text` |
+
 **Data Extraction (Get Command)**:
-- Extracts from `div.time-point-wrapper` and `div.time-interval-wrapper`
+- Extracts from `.time-point-wrapper` and `.time-interval-wrapper` within `.one-day-timebar .timeline`
+- Time values: read from `input.time-picker__input` `.value`
+- Interval types: read from `.output-label` `.textContent`
 - **Filters out break/absence entries**: Entries with type containing "break" or "absence" (case-insensitive) are excluded from results
   - Example: Entry with type `"Break/absence"` is filtered out
   - This applies to both `get` command (reading data) and result validation
@@ -145,12 +173,15 @@ widget.fire('onChange', { value: dateObj });  // Triggers data load
 - Handles empty days gracefully (returns `[]`)
 
 **Form Filling (Set Command)**:
-- Sets time inputs using ZK widget API: `widget.setValue(minutes)`
-- Sets type selector using ZK widget API: `widget.fire('onChanging', { value })`
-- Time conversion: Converts `HH:MM` format to minutes (e.g., `8:45` → 525 minutes)
-- Type selection: Fills search input and clicks matching suggestion/result item
+- Sets time inputs by setting `.value` + dispatching `input`/`change` events + Enter key to commit
+- Sets type by filling `.search-select input.input-real` to trigger search, then clicking matching result
+- Type search popup appears at document level (`.popup__content.open.popup__content--search-select`)
 - Form automation: Clicks "Add" button, fills form fields, clicks "Confirm"
 - Validates no existing entries before writing (safety check)
+
+**Known Issues:**
+- **Background tab operation**: Setting `input.value` + dispatching events may not fully trigger Vue's reactivity for all components (time pickers, type selector). Time pickers need Enter key to commit. If issues persist, may need `inject.js` reintroduced to access Vue component instances via `element.__vue__` or `element.__vueParentComponent`
+- **Type selection ("wh")**: May not work correctly — needs testing. The flyout may not close after clicking Confirm, possibly because form values aren't committed to Vue's data model
 
 ## Technical Stack
 
@@ -187,7 +218,6 @@ atoss-cli/
 │   │   │   └── content.ts            # Content script
 │   │   ├── public/
 │   │   │   ├── manifest.json
-│   │   │   ├── inject.js             # Page context script
 │   │   │   └── icons/
 │   │   └── dist/
 │   │
@@ -219,7 +249,7 @@ npm run clean         # Clean all dist/ directories
 **Extension Build**:
 - Compiles TypeScript with `module: "None"` to avoid ES module syntax
 - Automated sed script removes `export {};` statements
-- Copies `public/` files (manifest, icons, inject.js) to `dist/`
+- Copies `public/` files (manifest, icons) to `dist/`
 
 ## Setup & Usage
 
@@ -268,7 +298,7 @@ npm start set -- -e 9:00,17:00
 - Daemon only accepts connections from registered extension ID
 - Unix socket limited to local machine communication
 - All communication happens locally (no network requests)
-- Extension runs with minimal permissions (activeTab, nativeMessaging, scripting)
+- Extension runs with minimal permissions (cookies, nativeMessaging, scripting)
 
 ## Development Notes
 
